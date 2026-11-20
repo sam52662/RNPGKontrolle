@@ -65,8 +65,8 @@ const HomeScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Wave transition */}
-          <View style={styles.headerWave} />
+          {/* Wave bottom of header */}
+          <View style={styles.headerWaveBot} />
         </View>
 
         {/* ── Stats ── */}
@@ -148,32 +148,34 @@ const styles = StyleSheet.create({
   scrollContent: { paddingBottom: 0 },
 
   // ── Header ──────────────────────────────────────────────
-  header: { height: 180, overflow: 'hidden', position: 'relative' },
+  header: { height: 160, overflow: 'hidden', position: 'relative' },
   headerBg: { ...StyleSheet.absoluteFillObject },
   headerSky: {
-    position: 'absolute', top: 0, left: 0, right: 0, height: 90,
-    backgroundColor: '#1a3d20',
+    position: 'absolute', top: 0, left: 0, right: 0, height: 100,
+    backgroundColor: '#2a5c35',
   },
   headerForest: {
-    position: 'absolute', top: 55, left: 0, right: 0, height: 70,
+    position: 'absolute', top: 40, left: 0, right: 0, height: 80,
     backgroundColor: '#0f2a14',
-    borderTopLeftRadius: 60,
-    borderTopRightRadius: 40,
+    borderTopLeftRadius: 80,
+    borderTopRightRadius: 120,
   },
   headerWater: {
-    position: 'absolute', top: 90, left: 0, right: 0, bottom: 0,
-    backgroundColor: '#152e1c',
-    opacity: 0.9,
+    position: 'absolute', top: 95, left: 0, right: 0, bottom: 0,
+    backgroundColor: '#1a3d20',
   },
   headerFog: {
-    position: 'absolute', top: 70, left: 0, right: 0, height: 40,
-    backgroundColor: '#2a5535',
-    opacity: 0.3,
+    position: 'absolute', top: 80, left: 0, right: 0, height: 30,
+    backgroundColor: '#3a7a4a',
+    opacity: 0.25,
+    borderTopLeftRadius: 999,
+    borderTopRightRadius: 999,
   },
   headerContent: {
     position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
     paddingTop: 44, paddingHorizontal: 20,
     justifyContent: 'flex-start',
+    backgroundColor: 'rgba(10,30,14,0.18)',
   },
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
@@ -199,11 +201,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderTopLeftRadius: 999, borderTopRightRadius: 999,
   },
+  headerWaveBot: {
+    position: 'absolute', bottom: -20, left: -20, right: -20, height: 44,
+    backgroundColor: '#163d22',
+    borderTopLeftRadius: 999, borderTopRightRadius: 999,
+  },
 
   // ── Stats ────────────────────────────────────────────────
   statsRow: {
     flexDirection: 'row', gap: 12,
-    paddingHorizontal: 16, paddingTop: 20, paddingBottom: 4,
+    paddingHorizontal: 16, paddingTop: 14, paddingBottom: 4,
   },
   statCard: {
     flex: 1, alignItems: 'center',
