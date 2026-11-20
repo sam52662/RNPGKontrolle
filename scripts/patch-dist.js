@@ -21,7 +21,157 @@ fs.writeFileSync(JS_FILE, js);
 console.log(`JS bundle: patched ${after} asset paths (was ${before})`);
 
 // 2. Write index.html with SVG fishing background + correct paths
-const SVG_BG = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='900' viewBox='0 0 800 900'%3E%3Cdefs%3E%3ClinearGradient id='sky' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%230a1f10'/%3E%3Cstop offset='45%25' stop-color='%23112d18'/%3E%3Cstop offset='60%25' stop-color='%230d2b1a'/%3E%3Cstop offset='100%25' stop-color='%230a1e14'/%3E%3C/linearGradient%3E%3ClinearGradient id='water' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23082030' stop-opacity='0.95'/%3E%3Cstop offset='100%25' stop-color='%23050f18' stop-opacity='1'/%3E%3C/linearGradient%3E%3ClinearGradient id='moon' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23f0d980'/%3E%3Cstop offset='100%25' stop-color='%23c8a84b'/%3E%3C/linearGradient%3E%3Cfilter id='glow'%3E%3CfeGaussianBlur stdDeviation='4' result='blur'/%3E%3CfeMerge%3E%3CfeMergeNode in='blur'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/defs%3E%3Crect width='800' height='900' fill='url(%23sky)'/%3E%3Ccircle cx='120' cy='60' r='1.2' fill='%23fff' opacity='0.5'/%3E%3Ccircle cx='240' cy='35' r='0.8' fill='%23fff' opacity='0.4'/%3E%3Ccircle cx='380' cy='25' r='1.4' fill='%23fff' opacity='0.6'/%3E%3Ccircle cx='520' cy='55' r='0.9' fill='%23fff' opacity='0.35'/%3E%3Ccircle cx='650' cy='30' r='1.1' fill='%23fff' opacity='0.5'/%3E%3Ccircle cx='720' cy='70' r='0.7' fill='%23fff' opacity='0.3'/%3E%3Ccircle cx='60' cy='100' r='0.8' fill='%23fff' opacity='0.3'/%3E%3Ccircle cx='310' cy='80' r='0.6' fill='%23fff' opacity='0.4'/%3E%3Ccircle cx='580' cy='90' r='1.0' fill='%23fff' opacity='0.45'/%3E%3Ccircle cx='760' cy='110' r='0.8' fill='%23fff' opacity='0.3'/%3E%3Ccircle cx='660' cy='100' r='38' fill='%23c8a84b' opacity='0.07' filter='url(%23glow)'/%3E%3Ccircle cx='660' cy='100' r='22' fill='url(%23moon)' opacity='0.85' filter='url(%23glow)'/%3E%3Ccircle cx='652' cy='94' r='8' fill='%230a1f10' opacity='0.18'/%3E%3Cellipse cx='660' cy='570' rx='8' ry='40' fill='%23c8a84b' opacity='0.12'/%3E%3Cellipse cx='660' cy='570' rx='3' ry='20' fill='%23e8c96b' opacity='0.18'/%3E%3Cpath d='M-10 400 L30 320 L70 400 Z' fill='%23122a18' opacity='0.6'/%3E%3Cpath d='M20 410 L65 310 L110 410 Z' fill='%23122a18' opacity='0.6'/%3E%3Cpath d='M55 405 L100 295 L145 405 Z' fill='%23152e1c' opacity='0.65'/%3E%3Cpath d='M90 415 L130 320 L170 415 Z' fill='%23122a18' opacity='0.6'/%3E%3Cpath d='M-10 430 L40 335 L90 430 Z' fill='%231a3d22'/%3E%3Cpath d='M35 435 L85 325 L135 435 Z' fill='%231e4426'/%3E%3Cpath d='M75 430 L128 310 L180 430 Z' fill='%231a3d22'/%3E%3Cpath d='M120 435 L165 330 L210 435 Z' fill='%231c4024'/%3E%3Cpath d='M155 428 L195 335 L235 428 Z' fill='%231a3d22'/%3E%3Cpath d='M-10 430 Q100 420 220 435 L220 480 L-10 480 Z' fill='%23122a18'/%3E%3Cpath d='M570 410 L610 315 L650 410 Z' fill='%23122a18' opacity='0.6'/%3E%3Cpath d='M610 405 L655 295 L700 405 Z' fill='%23152e1c' opacity='0.65'/%3E%3Cpath d='M650 410 L690 320 L730 410 Z' fill='%23122a18' opacity='0.6'/%3E%3Cpath d='M700 415 L740 310 L780 415 Z' fill='%23122a18' opacity='0.6'/%3E%3Cpath d='M565 435 L615 330 L665 435 Z' fill='%231a3d22'/%3E%3Cpath d='M610 430 L662 315 L714 430 Z' fill='%231e4426'/%3E%3Cpath d='M655 435 L700 320 L745 435 Z' fill='%231c4024'/%3E%3Cpath d='M700 428 L742 330 L784 428 Z' fill='%231a3d22'/%3E%3Cpath d='M740 432 L778 338 L816 432 Z' fill='%231e4426'/%3E%3Cpath d='M565 435 Q680 420 820 435 L820 480 L565 480 Z' fill='%23122a18'/%3E%3Crect x='0' y='460' width='800' height='440' fill='url(%23water)'/%3E%3Cpath d='M0 460 Q200 455 400 462 Q600 468 800 460' stroke='%2320503a' stroke-width='1.5' fill='none' opacity='0.6'/%3E%3Cellipse cx='400' cy='490' rx='180' ry='4' fill='none' stroke='%231a4a3a' stroke-width='1' opacity='0.5'/%3E%3Cellipse cx='400' cy='510' rx='220' ry='5' fill='none' stroke='%23163d30' stroke-width='1' opacity='0.4'/%3E%3Cellipse cx='400' cy='535' rx='260' ry='5' fill='none' stroke='%23122e25' stroke-width='1' opacity='0.35'/%3E%3Cellipse cx='200' cy='520' rx='100' ry='3' fill='none' stroke='%231a4a3a' stroke-width='0.8' opacity='0.3'/%3E%3Cellipse cx='600' cy='515' rx='120' ry='3' fill='none' stroke='%231a4a3a' stroke-width='0.8' opacity='0.3'/%3E%3Cpath d='M40 460 Q50 500 42 560' stroke='%231a3d22' stroke-width='8' opacity='0.15' fill='none'/%3E%3Cpath d='M100 460 Q108 510 102 580' stroke='%231a3d22' stroke-width='10' opacity='0.12' fill='none'/%3E%3Cpath d='M700 460 Q710 505 703 570' stroke='%231a3d22' stroke-width='9' opacity='0.14' fill='none'/%3E%3Cpath d='M740 460 Q748 495 742 555' stroke='%231a3d22' stroke-width='7' opacity='0.12' fill='none'/%3E%3Cline x1='175' y1='445' x2='340' y2='390' stroke='%238B5E3C' stroke-width='2.5' stroke-linecap='round' opacity='0.7'/%3E%3Cline x1='340' y1='390' x2='358' y2='465' stroke='%23c8a84b' stroke-width='0.8' stroke-dasharray='3,4' opacity='0.5'/%3E%3Ccircle cx='358' cy='466' r='2.5' fill='%23c8a84b' opacity='0.6'/%3E%3Crect x='0' y='440' width='800' height='40' fill='url(%23sky)' opacity='0.3'/%3E%3C/svg%3E")`;
+// Build SVG in JS (plain string), then URL-encode for data URI
+const svgRaw = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="900" viewBox="0 0 800 900">
+<defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#060d12"/>
+    <stop offset="30%" stop-color="#0a1a1f"/>
+    <stop offset="55%" stop-color="#0d2318"/>
+    <stop offset="100%" stop-color="#091a12"/>
+  </linearGradient>
+  <linearGradient id="glow_sky" x1="0.7" y1="0" x2="0.3" y2="0.6">
+    <stop offset="0%" stop-color="#c8a84b" stop-opacity="0.18"/>
+    <stop offset="100%" stop-color="#c8a84b" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#091820" stop-opacity="1"/>
+    <stop offset="100%" stop-color="#040c10" stop-opacity="1"/>
+  </linearGradient>
+  <linearGradient id="moon_grad" x1="0" y1="0" x2="0.3" y2="1">
+    <stop offset="0%" stop-color="#fef0a0"/>
+    <stop offset="100%" stop-color="#c8a84b"/>
+  </linearGradient>
+  <radialGradient id="moon_halo" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#c8a84b" stop-opacity="0.25"/>
+    <stop offset="60%" stop-color="#c8a84b" stop-opacity="0.08"/>
+    <stop offset="100%" stop-color="#c8a84b" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="moon_refl" cx="50%" cy="10%" r="90%">
+    <stop offset="0%" stop-color="#c8a84b" stop-opacity="0.22"/>
+    <stop offset="100%" stop-color="#c8a84b" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="fog_l" cx="20%" cy="80%" r="60%">
+    <stop offset="0%" stop-color="#1a3d28" stop-opacity="0.55"/>
+    <stop offset="100%" stop-color="#1a3d28" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="fog_r" cx="80%" cy="80%" r="60%">
+    <stop offset="0%" stop-color="#1a3d28" stop-opacity="0.55"/>
+    <stop offset="100%" stop-color="#1a3d28" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="blur_sm"><feGaussianBlur stdDeviation="2"/></filter>
+  <filter id="blur_md"><feGaussianBlur stdDeviation="6"/></filter>
+  <filter id="blur_lg"><feGaussianBlur stdDeviation="14"/></filter>
+  <filter id="blur_xl"><feGaussianBlur stdDeviation="28"/></filter>
+</defs>
+
+<!-- Sky base -->
+<rect width="800" height="900" fill="url(#sky)"/>
+<!-- Moonlight wash across sky -->
+<rect width="800" height="900" fill="url(#glow_sky)"/>
+
+<!-- Stars -->
+<circle cx="80"  cy="38"  r="0.9" fill="#fff" opacity="0.55"/>
+<circle cx="155" cy="22"  r="0.6" fill="#fff" opacity="0.4"/>
+<circle cx="230" cy="55"  r="1.1" fill="#fff" opacity="0.65"/>
+<circle cx="310" cy="18"  r="0.7" fill="#fff" opacity="0.45"/>
+<circle cx="395" cy="42"  r="1.3" fill="#fff" opacity="0.7"/>
+<circle cx="460" cy="28"  r="0.8" fill="#fff" opacity="0.4"/>
+<circle cx="540" cy="60"  r="0.6" fill="#fff" opacity="0.35"/>
+<circle cx="610" cy="20"  r="1.0" fill="#fff" opacity="0.55"/>
+<circle cx="45"  cy="85"  r="0.7" fill="#fff" opacity="0.3"/>
+<circle cx="185" cy="78"  r="0.5" fill="#fff" opacity="0.35"/>
+<circle cx="280" cy="92"  r="0.9" fill="#fff" opacity="0.4"/>
+<circle cx="430" cy="75"  r="0.6" fill="#fff" opacity="0.3"/>
+<circle cx="505" cy="88"  r="0.8" fill="#fff" opacity="0.4"/>
+<circle cx="680" cy="55"  r="0.7" fill="#fff" opacity="0.35"/>
+<circle cx="740" cy="32"  r="1.1" fill="#fff" opacity="0.5"/>
+<circle cx="770" cy="90"  r="0.6" fill="#fff" opacity="0.3"/>
+
+<!-- Moon halo (blurred) -->
+<circle cx="650" cy="95" r="80" fill="url(#moon_halo)" filter="url(#blur_lg)"/>
+<!-- Moon glow soft ring -->
+<circle cx="650" cy="95" r="38" fill="#c8a84b" opacity="0.12" filter="url(#blur_md)"/>
+<!-- Moon disk -->
+<circle cx="650" cy="95" r="24" fill="url(#moon_grad)" opacity="0.92"/>
+<!-- Moon subtle crater shadow -->
+<circle cx="641" cy="88" r="9"  fill="#8a6820" opacity="0.14"/>
+<circle cx="659" cy="102" r="5" fill="#8a6820" opacity="0.10"/>
+
+<!-- Back treeline left — distant, blurred, dark -->
+<path d="M-10 430 C20 390 35 350 55 310 C70 350 85 390 110 430
+         C125 395 140 355 165 300 C185 352 195 395 220 430
+         C240 388 258 342 285 285 C302 345 315 392 340 430
+         C355 395 368 358 388 310 C405 362 415 400 435 430 L-10 430Z"
+      fill="#0d2218" opacity="0.7" filter="url(#blur_sm)"/>
+
+<!-- Mid treeline right — distant -->
+<path d="M380 435 C410 388 428 345 455 290 C472 348 485 392 510 435
+         C530 390 548 348 572 295 C590 352 602 395 625 435
+         C645 388 665 342 690 288 C708 348 718 395 745 435
+         C762 392 778 352 800 300 L810 440 L380 440Z"
+      fill="#0d2218" opacity="0.7" filter="url(#blur_sm)"/>
+
+<!-- Front treeline left — organic curves, layered -->
+<path d="M-10 455
+  C5 418 18 395 38 358 C52 395 60 418 75 455
+  C88 412 102 382 125 338 C140 382 150 415 168 455
+  C180 415 195 385 218 340 C233 385 242 418 258 455
+  C270 418 282 392 302 352 C316 395 322 422 338 455
+  C350 418 362 390 382 348 C396 392 404 420 420 455
+  L-10 455Z"
+      fill="#122a1a"/>
+<path d="M-10 455
+  C8 428 20 410 42 378 C55 410 65 432 80 455
+  C92 422 108 398 132 362 C146 400 155 428 172 455
+  C184 425 198 400 222 362 C237 400 246 428 262 455
+  L-10 455Z"
+      fill="#183222" opacity="0.85"/>
+
+<!-- Front treeline right -->
+<path d="M560 455
+  C575 415 590 382 612 338 C628 382 638 418 655 455
+  C668 412 682 378 705 332 C720 380 730 415 748 455
+  C762 415 775 385 795 342 L810 455Z"
+      fill="#122a1a"/>
+<path d="M540 455
+  C558 425 572 400 595 365 C610 402 620 428 638 455
+  C652 422 668 395 690 358 C706 398 714 428 732 455
+  C748 422 762 395 782 358 L810 455 L540 455Z"
+      fill="#183222" opacity="0.85"/>
+
+<!-- Ground bank -->
+<path d="M-10 455 Q200 448 400 458 Q600 466 810 452 L810 480 L-10 480Z" fill="#0f2318"/>
+
+<!-- Fog / mist at water edge -->
+<rect x="0" y="445" width="800" height="50" fill="url(#fog_l)" filter="url(#blur_md)"/>
+<rect x="0" y="445" width="800" height="50" fill="url(#fog_r)" filter="url(#blur_md)"/>
+
+<!-- Water -->
+<rect x="0" y="458" width="800" height="442" fill="url(#water)"/>
+
+<!-- Moon reflection column -->
+<rect x="630" y="460" width="38" height="440" fill="url(#moon_refl)" filter="url(#blur_md)"/>
+<!-- Bright highlight center -->
+<rect x="644" y="460" width="10" height="300" fill="#c8a84b" opacity="0.07" filter="url(#blur_sm)"/>
+
+<!-- Water surface shimmer lines -->
+<path d="M0 468 Q400 462 800 470"   stroke="#1e4a35" stroke-width="1.2" fill="none" opacity="0.6"/>
+<path d="M0 482 Q400 476 800 484"   stroke="#19402e" stroke-width="1"   fill="none" opacity="0.45"/>
+<path d="M0 500 Q400 494 800 502"   stroke="#163828" stroke-width="1"   fill="none" opacity="0.38"/>
+<path d="M0 522 Q400 516 800 524"   stroke="#122e22" stroke-width="0.8" fill="none" opacity="0.3"/>
+<path d="M0 548 Q400 542 800 550"   stroke="#0f2820" stroke-width="0.8" fill="none" opacity="0.25"/>
+<path d="M100 490 Q300 487 500 492" stroke="#c8a84b" stroke-width="0.6" fill="none" opacity="0.12"/>
+<path d="M200 510 Q400 506 600 512" stroke="#c8a84b" stroke-width="0.5" fill="none" opacity="0.09"/>
+
+<!-- Fishing rod — slim, elegant -->
+<line x1="168" y1="448" x2="310" y2="400" stroke="#6b4423" stroke-width="2.2" stroke-linecap="round" opacity="0.8"/>
+<line x1="310" y1="400" x2="325" y2="472" stroke="#c8a84b" stroke-width="0.7" stroke-dasharray="4,5" opacity="0.55"/>
+<circle cx="325" cy="473" r="2.8" fill="#c8a84b" opacity="0.65"/>
+<circle cx="325" cy="473" r="5"   fill="#c8a84b" opacity="0.15" filter="url(#blur_sm)"/>
+</svg>`;
+
+const SVG_BG = 'url("data:image/svg+xml,' + encodeURIComponent(svgRaw) + '")';
 
 const html = `<!DOCTYPE html>
 <html lang='de'>
@@ -31,7 +181,7 @@ const html = `<!DOCTYPE html>
     <title>RNPG Kontrolle</title>
     <style>
       html,body,#root{width:100%;-webkit-overflow-scrolling:touch;margin:0;padding:0;min-height:100%}
-      #root{flex-shrink:0;flex-basis:auto;flex-grow:1;display:flex;flex:1;position:relative;z-index:1}
+      #root{flex-shrink:0;flex-basis:auto;flex-grow:1;display:flex;flex:1;position:relative;z-index:1;background:transparent!important}
       html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;height:calc(100% + env(safe-area-inset-top))}
       body{
         display:flex;overflow-y:auto;overscroll-behavior-y:none;
