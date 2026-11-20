@@ -54,7 +54,7 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.headerInner}>
             <View style={styles.headerLeft}>
               <View style={styles.appIconBox}>
-                <Image source={{ uri: ICON_FISH_CLIPBOARD }} style={styles.appIconImg} />
+                <Image source={require('../../assets/icon-header.png')} style={styles.appIconImg} />
               </View>
               <View style={styles.headerDivider} />
               <View>
@@ -131,6 +131,19 @@ const HomeScreen = ({ navigation }) => {
             />
           ))
         )}
+
+        {/* ── Kontakte ── */}
+        <View style={styles.contactBox}>
+          <Text style={styles.contactTitle}>NOTRUF / KONTAKTE</Text>
+          <View style={styles.contactRow}>
+            <Text style={styles.contactLabel}>Wasserschutzpolizei HD</Text>
+            <Text style={styles.contactNum}>06221 137483</Text>
+          </View>
+          <View style={styles.contactRow}>
+            <Text style={styles.contactLabel}>Wasserschutzpolizei MA</Text>
+            <Text style={styles.contactNum}>0621 16870</Text>
+          </View>
+        </View>
 
         <View style={{ height: 40 }} />
       </ScrollView>
@@ -227,13 +240,22 @@ const styles = StyleSheet.create({
   emptyTitle: { fontSize: 24, fontWeight: '900', color: '#fff', marginBottom: 10 },
   emptyBody: { fontSize: 15, color: 'rgba(255,255,255,0.6)', textAlign: 'center', lineHeight: 24 },
 
-  bottomWaveWrap: { marginTop: 32, overflow: 'hidden' },
-  bottomWave: {
-    height: 60,
-    backgroundColor: '#3dba4e',
-    opacity: 0.15,
-    borderTopLeftRadius: 999, borderTopRightRadius: 999,
+  contactBox: {
+    marginHorizontal: 16, marginTop: 24,
+    backgroundColor: 'rgba(0,0,0,0.25)',
+    borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)',
+    paddingVertical: 14, paddingHorizontal: 16,
   },
+  contactTitle: {
+    fontSize: 10, fontWeight: '800', color: 'rgba(255,255,255,0.4)',
+    letterSpacing: 1.4, marginBottom: 10, textAlign: 'center',
+  },
+  contactRow: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.06)',
+  },
+  contactLabel: { fontSize: 13, color: 'rgba(255,255,255,0.6)', fontWeight: '500' },
+  contactNum: { fontSize: 14, color: '#3dba4e', fontWeight: '700', fontFamily: 'monospace' },
 });
 
 export default HomeScreen;
