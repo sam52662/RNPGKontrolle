@@ -1,0 +1,26 @@
+{
+  "name": "RNPG Kontrolle",
+  "short_name": "RNPG",
+  "description": "Fischereikontrolle App - Pachtgemeinschaft Kurpfalz e.V.",
+  "start_url": "/RNPGKontrolle/",
+  "scope": "/RNPGKontrolle/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5F0E8",
+  "theme_color": "#1B4D2E",
+  "lang": "de",
+  "icons": [
+    {
+      "src": "/RNPGKontrolle/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/RNPGKontrolle/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
