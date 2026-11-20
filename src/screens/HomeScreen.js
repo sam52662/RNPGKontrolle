@@ -66,8 +66,6 @@ const HomeScreen = ({ navigation }) => {
               <Text style={styles.settingsIcon}>⚙️</Text>
             </TouchableOpacity>
           </View>
-          {/* Wave curve at bottom of header */}
-          <View style={styles.headerWave} />
         </View>
 
         {/* ── Stats ── */}
@@ -134,10 +132,6 @@ const HomeScreen = ({ navigation }) => {
           ))
         )}
 
-        {/* Bottom wave */}
-        <View style={styles.bottomWaveWrap}>
-          <View style={styles.bottomWave} />
-        </View>
         <View style={{ height: 40 }} />
       </ScrollView>
     </View>

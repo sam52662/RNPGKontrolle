@@ -22,13 +22,7 @@ const after = (js.match(/\/RNPGKontrolle\/assets\//g) || []).length;
 fs.writeFileSync(JS_FILE, js);
 console.log(`JS bundle: patched ${after} asset paths (was ${before})`);
 
-// 2. Write index.html — real photo background + green waves
-// Wave SVGs: top wave (bottom of header area) and bottom wave
-const topWaveSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C200,80 400,0 720,40 C1040,80 1240,0 1440,40 L1440,80 L0,80 Z" fill="#163d22"/><path d="M0,50 C180,20 360,70 720,50 C1080,30 1260,70 1440,50 L1440,80 L0,80 Z" fill="#2a6e38" opacity="0.5"/></svg>`;
-const bottomWaveSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C200,0 400,80 720,40 C1040,0 1240,80 1440,40 L1440,0 L0,0 Z" fill="#163d22"/><path d="M0,30 C180,60 360,10 720,30 C1080,50 1260,10 1440,30 L1440,0 L0,0 Z" fill="#2a6e38" opacity="0.5"/></svg>`;
-const TOP_WAVE = 'url("data:image/svg+xml,' + encodeURIComponent(topWaveSvg) + '")';
-const BOTTOM_WAVE = 'url("data:image/svg+xml,' + encodeURIComponent(bottomWaveSvg) + '")';
-
+// 2. Write index.html — real photo background, no wave overlays
 const html = `<!DOCTYPE html>
 <html lang='de'>
   <head>
@@ -43,7 +37,6 @@ const html = `<!DOCTYPE html>
         display:flex;overflow-y:auto;overscroll-behavior-y:none;
         text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;
         background-color:#163d22;
-        /* Real photo as fixed full-screen background */
         background-image: url('/RNPGKontrolle/assets/background.png');
         background-size: cover;
         background-position: center top;
@@ -54,22 +47,8 @@ const html = `<!DOCTYPE html>
       body::before{
         content:'';
         position:fixed;top:0;left:0;right:0;bottom:0;
-        background:rgba(10,28,16,0.35);
+        background:rgba(10,28,16,0.25);
         z-index:0;
-        pointer-events:none;
-      }
-      /* Top wave overlay — sits at the bottom of the photo header area */
-      #wave-top{
-        position:fixed;top:195px;left:0;right:0;height:80px;z-index:0;
-        background-image: ${TOP_WAVE};
-        background-size: 100% 100%;
-        pointer-events:none;
-      }
-      /* Bottom wave decoration */
-      #wave-bottom{
-        position:fixed;bottom:0;left:0;right:0;height:80px;z-index:0;
-        background-image: ${BOTTOM_WAVE};
-        background-size: 100% 100%;
         pointer-events:none;
       }
     </style>
@@ -85,8 +64,6 @@ const html = `<!DOCTYPE html>
     <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/RNPGKontrolle/sw.js',{scope:'/RNPGKontrolle/'})})}</script>
   </head>
   <body>
-    <div id='wave-top'></div>
-    <div id='wave-bottom'></div>
     <div id='root'></div>
     <script src='/RNPGKontrolle/_expo/static/js/web/${JS_NAME}' defer></script>
   </body>

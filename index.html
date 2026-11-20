@@ -12,7 +12,6 @@
         display:flex;overflow-y:auto;overscroll-behavior-y:none;
         text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;
         background-color:#163d22;
-        /* Real photo as fixed full-screen background */
         background-image: url('/RNPGKontrolle/assets/background.png');
         background-size: cover;
         background-position: center top;
@@ -23,22 +22,8 @@
       body::before{
         content:'';
         position:fixed;top:0;left:0;right:0;bottom:0;
-        background:rgba(10,28,16,0.35);
+        background:rgba(10,28,16,0.25);
         z-index:0;
-        pointer-events:none;
-      }
-      /* Top wave overlay — sits at the bottom of the photo header area */
-      #wave-top{
-        position:fixed;top:195px;left:0;right:0;height:80px;z-index:0;
-        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201440%2080%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M0%2C40%20C200%2C80%20400%2C0%20720%2C40%20C1040%2C80%201240%2C0%201440%2C40%20L1440%2C80%20L0%2C80%20Z%22%20fill%3D%22%23163d22%22%2F%3E%3Cpath%20d%3D%22M0%2C50%20C180%2C20%20360%2C70%20720%2C50%20C1080%2C30%201260%2C70%201440%2C50%20L1440%2C80%20L0%2C80%20Z%22%20fill%3D%22%232a6e38%22%20opacity%3D%220.5%22%2F%3E%3C%2Fsvg%3E");
-        background-size: 100% 100%;
-        pointer-events:none;
-      }
-      /* Bottom wave decoration */
-      #wave-bottom{
-        position:fixed;bottom:0;left:0;right:0;height:80px;z-index:0;
-        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201440%2080%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M0%2C40%20C200%2C0%20400%2C80%20720%2C40%20C1040%2C0%201240%2C80%201440%2C40%20L1440%2C0%20L0%2C0%20Z%22%20fill%3D%22%23163d22%22%2F%3E%3Cpath%20d%3D%22M0%2C30%20C180%2C60%20360%2C10%20720%2C30%20C1080%2C50%201260%2C10%201440%2C30%20L1440%2C0%20L0%2C0%20Z%22%20fill%3D%22%232a6e38%22%20opacity%3D%220.5%22%2F%3E%3C%2Fsvg%3E");
-        background-size: 100% 100%;
         pointer-events:none;
       }
     </style>
@@ -54,9 +39,7 @@
     <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/RNPGKontrolle/sw.js',{scope:'/RNPGKontrolle/'})})}</script>
   </head>
   <body>
-    <div id='wave-top'></div>
-    <div id='wave-bottom'></div>
     <div id='root'></div>
-    <script src='/RNPGKontrolle/_expo/static/js/web/index-5c1383f5a92c1ba160985e26e23515e6.js' defer></script>
+    <script src='/RNPGKontrolle/_expo/static/js/web/index-80a765de34592348694eb95c64ea9f2b.js' defer></script>
   </body>
 </html>
