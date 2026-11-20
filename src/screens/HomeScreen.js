@@ -142,8 +142,7 @@ const styles = StyleSheet.create({
     paddingTop: 44,
     paddingBottom: 24,
     paddingHorizontal: 20,
-    background: 'linear-gradient(160deg, #1a4a2e 0%, #0d2b18 100%)',
-    backgroundColor: '#1a4a2e',
+    backgroundColor: 'rgba(10, 31, 16, 0.75)',
     position: 'relative',
     overflow: 'hidden',
   },
@@ -211,7 +210,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 4,
-    backgroundColor: '#0f2318',
+    backgroundColor: 'transparent',
   },
   ctaButton: {
     borderRadius: 20,
@@ -256,7 +255,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 10,
-    backgroundColor: '#0f2318',
+    backgroundColor: 'transparent',
   },
   historyTitle: { fontSize: 15, fontWeight: '700', color: 'rgba(255,255,255,0.75)', letterSpacing: 0.5 },
   historyBadge: {
