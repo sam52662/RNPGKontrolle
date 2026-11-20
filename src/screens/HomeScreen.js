@@ -71,17 +71,23 @@ const HomeScreen = ({ navigation }) => {
         {/* ── Stats ── */}
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
-            <Image source={{ uri: ICON_CLIPBOARD }} style={styles.statIconImg} />
+            <View style={[styles.statIconBg, { backgroundColor: 'rgba(255,255,255,0.1)' }]}>
+              <Image source={{ uri: ICON_CLIPBOARD }} style={styles.statIconImg} />
+            </View>
             <Text style={[styles.statNum, { color: '#fff' }]}>{kontrollen.length}</Text>
             <Text style={styles.statLabel}>Gesamt</Text>
           </View>
           <View style={styles.statCard}>
-            <Image source={{ uri: ICON_CLOUD }} style={styles.statIconImg} />
+            <View style={[styles.statIconBg, { backgroundColor: 'rgba(91,200,245,0.12)' }]}>
+              <Image source={{ uri: ICON_CLOUD }} style={styles.statIconImg} />
+            </View>
             <Text style={[styles.statNum, { color: '#5bc8f5' }]}>{synced}</Text>
             <Text style={styles.statLabel}>Synced</Text>
           </View>
           <View style={styles.statCard}>
-            <Image source={{ uri: ICON_WARNING }} style={styles.statIconImg} />
+            <View style={[styles.statIconBg, { backgroundColor: 'rgba(245,166,35,0.12)' }]}>
+              <Image source={{ uri: ICON_WARNING }} style={styles.statIconImg} />
+            </View>
             <Text style={[styles.statNum, { color: '#f5a623' }]}>{totalVerstoesse}</Text>
             <Text style={styles.statLabel}>Verstöße</Text>
           </View>
@@ -185,16 +191,21 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 999, borderTopRightRadius: 999,
   },
 
-  statsRow: { flexDirection: 'row', gap: 12, paddingHorizontal: 16, paddingTop: 22, paddingBottom: 4 },
+  statsRow: { flexDirection: 'row', gap: 10, paddingHorizontal: 16, paddingTop: 22, paddingBottom: 4 },
   statCard: {
     flex: 1, alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    borderRadius: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.07)',
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderRadius: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)',
     paddingVertical: 18, paddingHorizontal: 6,
   },
-  statIconImg: { width: 32, height: 32, marginBottom: 8 },
+  statIconBg: {
+    width: 52, height: 52, borderRadius: 16,
+    alignItems: 'center', justifyContent: 'center',
+    marginBottom: 10,
+  },
+  statIconImg: { width: 28, height: 28 },
   statNum: { fontSize: 28, fontWeight: '900', lineHeight: 32 },
-  statLabel: { fontSize: 12, color: 'rgba(255,255,255,0.6)', marginTop: 4, fontWeight: '500' },
+  statLabel: { fontSize: 12, color: 'rgba(255,255,255,0.55)', marginTop: 4, fontWeight: '500' },
 
   ctaWrap: { paddingHorizontal: 16, paddingTop: 16 },
   ctaBtn: {
