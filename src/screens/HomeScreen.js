@@ -163,21 +163,21 @@ const styles = StyleSheet.create({
   scrollContent: { paddingBottom: 0 },
 
   header: {
-    height: 170, backgroundColor: 'transparent', position: 'relative', overflow: 'visible',
+    height: 190, backgroundColor: 'transparent', position: 'relative', overflow: 'visible',
   },
   headerInner: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingTop: 44, paddingHorizontal: 20, paddingBottom: 12,
+    paddingTop: 48, paddingHorizontal: 20, paddingBottom: 12,
   },
-  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 16 },
   appIconBox: {
-    width: 56, height: 56,
+    width: 72, height: 72,
     alignItems: 'center', justifyContent: 'center',
   },
-  appIconImg: { width: 56, height: 56 },
-  headerDivider: { width: 1.5, height: 40, backgroundColor: 'rgba(255,255,255,0.35)', marginHorizontal: 2 },
-  appName: { fontSize: 22, fontWeight: '900', color: '#fff', letterSpacing: 0.2 },
-  appOrg: { fontSize: 12, color: 'rgba(255,255,255,0.65)', marginTop: 2 },
+  appIconImg: { width: 72, height: 72 },
+  headerDivider: { width: 1.5, height: 50, backgroundColor: 'rgba(255,255,255,0.35)', marginHorizontal: 4 },
+  appName: { fontSize: 28, fontWeight: '900', color: '#fff', letterSpacing: 1.2, fontFamily: 'Georgia, "Times New Roman", serif' },
+  appOrg: { fontSize: 13, color: 'rgba(255,255,255,0.7)', marginTop: 3, letterSpacing: 0.3, fontFamily: 'Georgia, "Times New Roman", serif' },
   settingsBtn: {
     width: 42, height: 42, borderRadius: 21,
     borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.4)',
