@@ -55,52 +55,68 @@ const html = `<!DOCTYPE html>
       }
       /* Lake photo header — positioned behind React root */
       #lake-header{
-        position:fixed;top:0;left:0;right:0;height:175px;z-index:0;
-        background:
-          linear-gradient(180deg, transparent 55%, #163d22 100%),
-          linear-gradient(180deg,
-            #3a7a4e 0%, #2d6840 18%,
-            #1a4a28 28%, #0f2e18 38%,
-            #1e5530 45%, #163d22 55%,
-            #0e2a18 65%, #122e1a 100%
-          );
-        overflow:hidden;
+        position:fixed;top:0;left:0;right:0;height:175px;z-index:0;overflow:hidden;
       }
-      /* Soft tree-top silhouette */
-      #lake-header::before{
-        content:'';position:absolute;top:30px;left:0;right:0;height:80px;
-        background:
-          radial-gradient(ellipse 60px 70px at 8%  100%, #0a2010 48%, transparent 50%),
-          radial-gradient(ellipse 50px 65px at 16% 100%, #0d2814 48%, transparent 50%),
-          radial-gradient(ellipse 55px 75px at 24% 100%, #091c0e 48%, transparent 50%),
-          radial-gradient(ellipse 45px 60px at 31% 100%, #0b2212 48%, transparent 50%),
-          radial-gradient(ellipse 60px 72px at 40% 100%, #0a1e0f 48%, transparent 50%),
-          radial-gradient(ellipse 50px 68px at 52% 100%, #0c2414 48%, transparent 50%),
-          radial-gradient(ellipse 58px 76px at 62% 100%, #091c0e 48%, transparent 50%),
-          radial-gradient(ellipse 48px 64px at 71% 100%, #0b2010 48%, transparent 50%),
-          radial-gradient(ellipse 55px 70px at 80% 100%, #0a1e0f 48%, transparent 50%),
-          radial-gradient(ellipse 50px 66px at 90% 100%, #0c2414 48%, transparent 50%),
-          radial-gradient(ellipse 45px 58px at 97% 100%, #091c0e 48%, transparent 50%);
+      /* Sky */
+      #lake-header-sky{
+        position:absolute;top:0;left:0;right:0;height:95px;
+        background:linear-gradient(180deg, #1a4a28 0%, #2d6e3a 40%, #3a7a46 70%, #2a5e32 100%);
       }
-      /* Water shimmer reflection */
-      #lake-header::after{
-        content:'';position:absolute;bottom:0;left:0;right:0;height:55px;
+      /* Forest silhouette — dark organic shapes */
+      #lake-header-forest{
+        position:absolute;top:20px;left:0;right:0;height:85px;
         background:
-          linear-gradient(180deg, transparent 0%, rgba(30,80,45,0.4) 100%),
-          repeating-linear-gradient(
-            180deg,
-            transparent,
-            transparent 5px,
-            rgba(255,255,255,0.03) 5px,
-            rgba(255,255,255,0.03) 6px
-          );
+          radial-gradient(ellipse 55px 90px at  4% 100%, #071a0d 50%, transparent 51%),
+          radial-gradient(ellipse 48px 80px at  9% 100%, #091e10 50%, transparent 51%),
+          radial-gradient(ellipse 60px 95px at 15% 100%, #061508 50%, transparent 51%),
+          radial-gradient(ellipse 50px 85px at 21% 100%, #081c0f 50%, transparent 51%),
+          radial-gradient(ellipse 55px 92px at 27% 100%, #071a0d 50%, transparent 51%),
+          radial-gradient(ellipse 45px 75px at 33% 100%, #0a2012 50%, transparent 51%),
+          radial-gradient(ellipse 58px 88px at 39% 100%, #061508 50%, transparent 51%),
+          radial-gradient(ellipse 52px 82px at 45% 100%, #091e10 50%, transparent 51%),
+          radial-gradient(ellipse 48px 78px at 51% 100%, #081c0f 50%, transparent 51%),
+          radial-gradient(ellipse 55px 90px at 57% 100%, #071a0d 50%, transparent 51%),
+          radial-gradient(ellipse 60px 95px at 63% 100%, #061508 50%, transparent 51%),
+          radial-gradient(ellipse 50px 83px at 69% 100%, #0a2012 50%, transparent 51%),
+          radial-gradient(ellipse 55px 88px at 75% 100%, #081c0f 50%, transparent 51%),
+          radial-gradient(ellipse 48px 80px at 81% 100%, #091e10 50%, transparent 51%),
+          radial-gradient(ellipse 52px 86px at 87% 100%, #071a0d 50%, transparent 51%),
+          radial-gradient(ellipse 58px 92px at 93% 100%, #061508 50%, transparent 51%),
+          radial-gradient(ellipse 45px 76px at 98% 100%, #0a2012 50%, transparent 51%);
       }
-      /* Glow from center (morning mist / light on water) */
+      /* Hill behind forest */
+      #lake-header-hill{
+        position:absolute;top:35px;left:30%;right:-5%;height:70px;
+        background:#1a3d20;
+        border-radius:50% 60% 0 0;
+        opacity:0.7;
+      }
+      /* Water */
+      #lake-header-water{
+        position:absolute;top:88px;left:0;right:0;bottom:0;
+        background:linear-gradient(180deg, #1e4a2a 0%, #163d22 40%, #0f2e18 100%);
+      }
+      /* Water shimmer lines */
+      #lake-header-water::after{
+        content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+        background:repeating-linear-gradient(
+          180deg,
+          transparent, transparent 7px,
+          rgba(255,255,255,0.025) 7px, rgba(255,255,255,0.025) 8px
+        );
+      }
+      /* Center glow — sunrise/mist light on water */
       #lake-glow{
-        position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);
-        width:280px;height:120px;
-        background:radial-gradient(ellipse, rgba(180,220,160,0.18) 0%, transparent 70%);
+        position:absolute;top:35%;left:50%;transform:translate(-50%,-50%);
+        width:320px;height:140px;
+        background:radial-gradient(ellipse, rgba(200,230,180,0.22) 0%, rgba(200,230,180,0.08) 40%, transparent 70%);
         pointer-events:none;
+      }
+      /* Wave transition to content */
+      #lake-header-wave{
+        position:absolute;bottom:-20px;left:-5%;right:-5%;height:50px;
+        background:#163d22;
+        border-radius:50% 50% 0 0;
       }
     </style>
     <meta name='theme-color' content='#1a4a2e'>
@@ -115,7 +131,14 @@ const html = `<!DOCTYPE html>
     <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/RNPGKontrolle/sw.js',{scope:'/RNPGKontrolle/'})})}</script>
   </head>
   <body>
-    <div id='lake-header'><div id='lake-glow'></div></div>
+    <div id='lake-header'>
+      <div id='lake-header-sky'></div>
+      <div id='lake-header-hill'></div>
+      <div id='lake-header-forest'></div>
+      <div id='lake-header-water'></div>
+      <div id='lake-glow'></div>
+      <div id='lake-header-wave'></div>
+    </div>
     <div id='root'></div>
     <script src='/RNPGKontrolle/_expo/static/js/web/${JS_NAME}' defer></script>
   </body>
