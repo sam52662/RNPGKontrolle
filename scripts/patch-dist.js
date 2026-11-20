@@ -47,6 +47,7 @@ const html = `<!DOCTYPE html>
     <meta name='description' content='Fischereikontrolle App - Pachtgemeinschaft Kurpfalz e.V.'>
     <link rel='shortcut icon' href='/RNPGKontrolle/favicon.ico' />
     <link rel='manifest' href='/RNPGKontrolle/manifest.json' />
+    <meta name='mobile-web-app-capable' content='yes' />
     <meta name='apple-mobile-web-app-capable' content='yes' />
     <meta name='apple-mobile-web-app-status-bar-style' content='black-translucent' />
     <meta name='apple-mobile-web-app-title' content='RNPG' />
