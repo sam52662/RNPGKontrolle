@@ -6,7 +6,9 @@ const BASE = '/RNPGKontrolle';
 
 // Dynamically find the JS bundle
 const jsDir = path.join(DIST, '_expo/static/js/web');
-const jsFiles = fs.readdirSync(jsDir).filter(f => f.startsWith('index-') && f.endsWith('.js'));
+const jsFiles = fs.readdirSync(jsDir)
+  .filter(f => f.startsWith('index-') && f.endsWith('.js') && fs.statSync(path.join(jsDir, f)).size > 0)
+  .sort((a, b) => fs.statSync(path.join(jsDir, b)).size - fs.statSync(path.join(jsDir, a)).size);
 if (!jsFiles.length) { console.error('No bundle found in', jsDir); process.exit(1); }
 const JS_NAME = jsFiles[0];
 const JS_FILE = path.join(jsDir, JS_NAME);
