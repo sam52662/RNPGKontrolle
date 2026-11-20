@@ -147,30 +147,12 @@ const styles = StyleSheet.create({
   scroll: { flex: 1, backgroundColor: 'transparent' },
   scrollContent: { paddingBottom: 0 },
 
-  // ── Header ──────────────────────────────────────────────
-  header: { height: 160, overflow: 'hidden', position: 'relative' },
-  headerBg: { ...StyleSheet.absoluteFillObject },
-  headerSky: {
-    position: 'absolute', top: 0, left: 0, right: 0, height: 100,
-    backgroundColor: '#2a5c35',
-  },
-  headerForest: {
-    position: 'absolute', top: 40, left: 0, right: 0, height: 80,
-    backgroundColor: '#0f2a14',
-    borderTopLeftRadius: 80,
-    borderTopRightRadius: 120,
-  },
-  headerWater: {
-    position: 'absolute', top: 95, left: 0, right: 0, bottom: 0,
-    backgroundColor: '#1a3d20',
-  },
-  headerFog: {
-    position: 'absolute', top: 80, left: 0, right: 0, height: 30,
-    backgroundColor: '#3a7a4a',
-    opacity: 0.25,
-    borderTopLeftRadius: 999,
-    borderTopRightRadius: 999,
-  },
+  header: { height: 160, overflow: 'visible', position: 'relative', backgroundColor: 'transparent' },
+  headerBg: { ...StyleSheet.absoluteFillObject, backgroundColor: 'transparent' },
+  headerSky:   { display: 'none' },
+  headerForest:{ display: 'none' },
+  headerWater: { display: 'none' },
+  headerFog:   { display: 'none' },
   headerContent: {
     position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
     paddingTop: 44, paddingHorizontal: 20,

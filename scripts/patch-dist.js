@@ -53,6 +53,55 @@ const html = `<!DOCTYPE html>
         background-position: center center;
         background-attachment: fixed;
       }
+      /* Lake photo header — positioned behind React root */
+      #lake-header{
+        position:fixed;top:0;left:0;right:0;height:175px;z-index:0;
+        background:
+          linear-gradient(180deg, transparent 55%, #163d22 100%),
+          linear-gradient(180deg,
+            #3a7a4e 0%, #2d6840 18%,
+            #1a4a28 28%, #0f2e18 38%,
+            #1e5530 45%, #163d22 55%,
+            #0e2a18 65%, #122e1a 100%
+          );
+        overflow:hidden;
+      }
+      /* Soft tree-top silhouette */
+      #lake-header::before{
+        content:'';position:absolute;top:30px;left:0;right:0;height:80px;
+        background:
+          radial-gradient(ellipse 60px 70px at 8%  100%, #0a2010 48%, transparent 50%),
+          radial-gradient(ellipse 50px 65px at 16% 100%, #0d2814 48%, transparent 50%),
+          radial-gradient(ellipse 55px 75px at 24% 100%, #091c0e 48%, transparent 50%),
+          radial-gradient(ellipse 45px 60px at 31% 100%, #0b2212 48%, transparent 50%),
+          radial-gradient(ellipse 60px 72px at 40% 100%, #0a1e0f 48%, transparent 50%),
+          radial-gradient(ellipse 50px 68px at 52% 100%, #0c2414 48%, transparent 50%),
+          radial-gradient(ellipse 58px 76px at 62% 100%, #091c0e 48%, transparent 50%),
+          radial-gradient(ellipse 48px 64px at 71% 100%, #0b2010 48%, transparent 50%),
+          radial-gradient(ellipse 55px 70px at 80% 100%, #0a1e0f 48%, transparent 50%),
+          radial-gradient(ellipse 50px 66px at 90% 100%, #0c2414 48%, transparent 50%),
+          radial-gradient(ellipse 45px 58px at 97% 100%, #091c0e 48%, transparent 50%);
+      }
+      /* Water shimmer reflection */
+      #lake-header::after{
+        content:'';position:absolute;bottom:0;left:0;right:0;height:55px;
+        background:
+          linear-gradient(180deg, transparent 0%, rgba(30,80,45,0.4) 100%),
+          repeating-linear-gradient(
+            180deg,
+            transparent,
+            transparent 5px,
+            rgba(255,255,255,0.03) 5px,
+            rgba(255,255,255,0.03) 6px
+          );
+      }
+      /* Glow from center (morning mist / light on water) */
+      #lake-glow{
+        position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);
+        width:280px;height:120px;
+        background:radial-gradient(ellipse, rgba(180,220,160,0.18) 0%, transparent 70%);
+        pointer-events:none;
+      }
     </style>
     <meta name='theme-color' content='#1a4a2e'>
     <meta name='description' content='Fischereikontrolle App - Pachtgemeinschaft Kurpfalz e.V.'>
@@ -66,6 +115,7 @@ const html = `<!DOCTYPE html>
     <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/RNPGKontrolle/sw.js',{scope:'/RNPGKontrolle/'})})}</script>
   </head>
   <body>
+    <div id='lake-header'><div id='lake-glow'></div></div>
     <div id='root'></div>
     <script src='/RNPGKontrolle/_expo/static/js/web/${JS_NAME}' defer></script>
   </body>
