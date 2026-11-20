@@ -22,17 +22,12 @@ const after = (js.match(/\/RNPGKontrolle\/assets\//g) || []).length;
 fs.writeFileSync(JS_FILE, js);
 console.log(`JS bundle: patched ${after} asset paths (was ${before})`);
 
-// 2. Write index.html — professional dark pattern background
-const svgPattern = `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80">
-  <rect width="80" height="80" fill="#163d22"/>
-  <path d="M40 0 L80 40 L40 80 L0 40 Z" fill="none" stroke="#2a6e38" stroke-width="0.6" stroke-opacity="0.18"/>
-  <circle cx="40" cy="40" r="1.5" fill="#2a6e38" fill-opacity="0.15"/>
-  <circle cx="0"  cy="0"  r="1.2" fill="#2a6e38" fill-opacity="0.12"/>
-  <circle cx="80" cy="0"  r="1.2" fill="#2a6e38" fill-opacity="0.12"/>
-  <circle cx="0"  cy="80" r="1.2" fill="#2a6e38" fill-opacity="0.12"/>
-  <circle cx="80" cy="80" r="1.2" fill="#2a6e38" fill-opacity="0.12"/>
-</svg>`;
-const SVG_BG = 'url("data:image/svg+xml,' + encodeURIComponent(svgPattern) + '")';
+// 2. Write index.html — real photo background + green waves
+// Wave SVGs: top wave (bottom of header area) and bottom wave
+const topWaveSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C200,80 400,0 720,40 C1040,80 1240,0 1440,40 L1440,80 L0,80 Z" fill="#163d22"/><path d="M0,50 C180,20 360,70 720,50 C1080,30 1260,70 1440,50 L1440,80 L0,80 Z" fill="#2a6e38" opacity="0.5"/></svg>`;
+const bottomWaveSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,40 C200,0 400,80 720,40 C1040,0 1240,80 1440,40 L1440,0 L0,0 Z" fill="#163d22"/><path d="M0,30 C180,60 360,10 720,30 C1080,50 1260,10 1440,30 L1440,0 L0,0 Z" fill="#2a6e38" opacity="0.5"/></svg>`;
+const TOP_WAVE = 'url("data:image/svg+xml,' + encodeURIComponent(topWaveSvg) + '")';
+const BOTTOM_WAVE = 'url("data:image/svg+xml,' + encodeURIComponent(bottomWaveSvg) + '")';
 
 const html = `<!DOCTYPE html>
 <html lang='de'>
@@ -48,75 +43,34 @@ const html = `<!DOCTYPE html>
         display:flex;overflow-y:auto;overscroll-behavior-y:none;
         text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;
         background-color:#163d22;
-        background-image: ${SVG_BG};
-        background-size: 80px 80px;
-        background-position: center center;
+        /* Real photo as fixed full-screen background */
+        background-image: url('/RNPGKontrolle/assets/background.png');
+        background-size: cover;
+        background-position: center top;
         background-attachment: fixed;
+        background-repeat: no-repeat;
       }
-      /* Lake photo header — positioned behind React root */
-      #lake-header{
-        position:fixed;top:0;left:0;right:0;height:175px;z-index:0;overflow:hidden;
-      }
-      /* Sky */
-      #lake-header-sky{
-        position:absolute;top:0;left:0;right:0;height:95px;
-        background:linear-gradient(180deg, #1a4a28 0%, #2d6e3a 40%, #3a7a46 70%, #2a5e32 100%);
-      }
-      /* Forest silhouette — dark organic shapes */
-      #lake-header-forest{
-        position:absolute;top:20px;left:0;right:0;height:85px;
-        background:
-          radial-gradient(ellipse 55px 90px at  4% 100%, #071a0d 50%, transparent 51%),
-          radial-gradient(ellipse 48px 80px at  9% 100%, #091e10 50%, transparent 51%),
-          radial-gradient(ellipse 60px 95px at 15% 100%, #061508 50%, transparent 51%),
-          radial-gradient(ellipse 50px 85px at 21% 100%, #081c0f 50%, transparent 51%),
-          radial-gradient(ellipse 55px 92px at 27% 100%, #071a0d 50%, transparent 51%),
-          radial-gradient(ellipse 45px 75px at 33% 100%, #0a2012 50%, transparent 51%),
-          radial-gradient(ellipse 58px 88px at 39% 100%, #061508 50%, transparent 51%),
-          radial-gradient(ellipse 52px 82px at 45% 100%, #091e10 50%, transparent 51%),
-          radial-gradient(ellipse 48px 78px at 51% 100%, #081c0f 50%, transparent 51%),
-          radial-gradient(ellipse 55px 90px at 57% 100%, #071a0d 50%, transparent 51%),
-          radial-gradient(ellipse 60px 95px at 63% 100%, #061508 50%, transparent 51%),
-          radial-gradient(ellipse 50px 83px at 69% 100%, #0a2012 50%, transparent 51%),
-          radial-gradient(ellipse 55px 88px at 75% 100%, #081c0f 50%, transparent 51%),
-          radial-gradient(ellipse 48px 80px at 81% 100%, #091e10 50%, transparent 51%),
-          radial-gradient(ellipse 52px 86px at 87% 100%, #071a0d 50%, transparent 51%),
-          radial-gradient(ellipse 58px 92px at 93% 100%, #061508 50%, transparent 51%),
-          radial-gradient(ellipse 45px 76px at 98% 100%, #0a2012 50%, transparent 51%);
-      }
-      /* Hill behind forest */
-      #lake-header-hill{
-        position:absolute;top:35px;left:30%;right:-5%;height:70px;
-        background:#1a3d20;
-        border-radius:50% 60% 0 0;
-        opacity:0.7;
-      }
-      /* Water */
-      #lake-header-water{
-        position:absolute;top:88px;left:0;right:0;bottom:0;
-        background:linear-gradient(180deg, #1e4a2a 0%, #163d22 40%, #0f2e18 100%);
-      }
-      /* Water shimmer lines */
-      #lake-header-water::after{
-        content:'';position:absolute;top:0;left:0;right:0;bottom:0;
-        background:repeating-linear-gradient(
-          180deg,
-          transparent, transparent 7px,
-          rgba(255,255,255,0.025) 7px, rgba(255,255,255,0.025) 8px
-        );
-      }
-      /* Center glow — sunrise/mist light on water */
-      #lake-glow{
-        position:absolute;top:35%;left:50%;transform:translate(-50%,-50%);
-        width:320px;height:140px;
-        background:radial-gradient(ellipse, rgba(200,230,180,0.22) 0%, rgba(200,230,180,0.08) 40%, transparent 70%);
+      /* Subtle dark overlay so text stays readable */
+      body::before{
+        content:'';
+        position:fixed;top:0;left:0;right:0;bottom:0;
+        background:rgba(10,28,16,0.35);
+        z-index:0;
         pointer-events:none;
       }
-      /* Wave transition to content */
-      #lake-header-wave{
-        position:absolute;bottom:-20px;left:-5%;right:-5%;height:50px;
-        background:#163d22;
-        border-radius:50% 50% 0 0;
+      /* Top wave overlay — sits at the bottom of the photo header area */
+      #wave-top{
+        position:fixed;top:195px;left:0;right:0;height:80px;z-index:0;
+        background-image: ${TOP_WAVE};
+        background-size: 100% 100%;
+        pointer-events:none;
+      }
+      /* Bottom wave decoration */
+      #wave-bottom{
+        position:fixed;bottom:0;left:0;right:0;height:80px;z-index:0;
+        background-image: ${BOTTOM_WAVE};
+        background-size: 100% 100%;
+        pointer-events:none;
       }
     </style>
     <meta name='theme-color' content='#1a4a2e'>
@@ -131,14 +85,8 @@ const html = `<!DOCTYPE html>
     <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/RNPGKontrolle/sw.js',{scope:'/RNPGKontrolle/'})})}</script>
   </head>
   <body>
-    <div id='lake-header'>
-      <div id='lake-header-sky'></div>
-      <div id='lake-header-hill'></div>
-      <div id='lake-header-forest'></div>
-      <div id='lake-header-water'></div>
-      <div id='lake-glow'></div>
-      <div id='lake-header-wave'></div>
-    </div>
+    <div id='wave-top'></div>
+    <div id='wave-bottom'></div>
     <div id='root'></div>
     <script src='/RNPGKontrolle/_expo/static/js/web/${JS_NAME}' defer></script>
   </body>
