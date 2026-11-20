@@ -21,14 +21,14 @@ fs.writeFileSync(JS_FILE, js);
 console.log(`JS bundle: patched ${after} asset paths (was ${before})`);
 
 // 2. Write index.html — professional dark pattern background
-const svgPattern = `<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60">
-  <rect width="60" height="60" fill="#1a3d28"/>
-  <path d="M30 0 L60 30 L30 60 L0 30 Z" fill="none" stroke="#ffffff" stroke-width="0.5" stroke-opacity="0.10"/>
-  <circle cx="30" cy="30" r="1.4" fill="#ffffff" fill-opacity="0.08"/>
-  <circle cx="0"  cy="0"  r="1"   fill="#ffffff" fill-opacity="0.06"/>
-  <circle cx="60" cy="0"  r="1"   fill="#ffffff" fill-opacity="0.06"/>
-  <circle cx="0"  cy="60" r="1"   fill="#ffffff" fill-opacity="0.06"/>
-  <circle cx="60" cy="60" r="1"   fill="#ffffff" fill-opacity="0.06"/>
+const svgPattern = `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80">
+  <rect width="80" height="80" fill="#163d22"/>
+  <path d="M40 0 L80 40 L40 80 L0 40 Z" fill="none" stroke="#2a6e38" stroke-width="0.6" stroke-opacity="0.18"/>
+  <circle cx="40" cy="40" r="1.5" fill="#2a6e38" fill-opacity="0.15"/>
+  <circle cx="0"  cy="0"  r="1.2" fill="#2a6e38" fill-opacity="0.12"/>
+  <circle cx="80" cy="0"  r="1.2" fill="#2a6e38" fill-opacity="0.12"/>
+  <circle cx="0"  cy="80" r="1.2" fill="#2a6e38" fill-opacity="0.12"/>
+  <circle cx="80" cy="80" r="1.2" fill="#2a6e38" fill-opacity="0.12"/>
 </svg>`;
 const SVG_BG = 'url("data:image/svg+xml,' + encodeURIComponent(svgPattern) + '")';
 
@@ -45,9 +45,9 @@ const html = `<!DOCTYPE html>
       body{
         display:flex;overflow-y:auto;overscroll-behavior-y:none;
         text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;
-        background-color:#1a3d28;
+        background-color:#163d22;
         background-image: ${SVG_BG};
-        background-size: 60px 60px;
+        background-size: 80px 80px;
         background-position: center center;
         background-attachment: fixed;
       }
