@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
-  StatusBar, RefreshControl, Alert, Image,
+  StatusBar, RefreshControl, Alert,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { getAllKontrollen, deleteKontrolle } from '../services/storage';
@@ -17,11 +17,7 @@ const HomeScreen = ({ navigation }) => {
     setKontrollen(data);
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      loadKontrollen();
-    }, [])
-  );
+  useFocusEffect(useCallback(() => { loadKontrollen(); }, []));
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -29,113 +25,107 @@ const HomeScreen = ({ navigation }) => {
     setRefreshing(false);
   };
 
-  const handleDelete = (id) => {
-    Alert.alert(
-      'Kontrolle löschen',
-      'Möchten Sie diese Kontrolle wirklich löschen?',
-      [
-        { text: 'Abbrechen', style: 'cancel' },
-        {
-          text: 'Löschen',
-          style: 'destructive',
-          onPress: async () => {
-            await deleteKontrolle(id);
-            loadKontrollen();
-          },
-        },
-      ]
-    );
-  };
+  const totalVerstoesse = kontrollen.filter(k => k.artDesVerstosses && k.artDesVerstosses.trim()).length;
+  const synced = kontrollen.filter(k => k.synced).length;
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
 
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <View>
-            <Text style={styles.headerTitle}>🎣 RNPG Kontrolle</Text>
-            <Text style={styles.headerSubtitle}>Pachtgemeinschaft Kurpfalz e.V.</Text>
+      {/* Hero Header with gradient */}
+      <View style={styles.hero}>
+        <View style={styles.heroOverlay} />
+
+        {/* Top bar */}
+        <View style={styles.topBar}>
+          <View style={styles.logoRow}>
+            <View style={styles.logoIcon}>
+              <Text style={styles.logoEmoji}>🎣</Text>
+            </View>
+            <View>
+              <Text style={styles.appTitle}>RNPG Kontrolle</Text>
+              <Text style={styles.appSub}>Pachtgemeinschaft Kurpfalz e.V.</Text>
+            </View>
           </View>
-          <TouchableOpacity
-            style={styles.settingsButton}
-            onPress={() => navigation.navigate('Settings')}
-          >
-            <Text style={styles.settingsIcon}>⚙️</Text>
+          <TouchableOpacity style={styles.settingsBtn} onPress={() => navigation.navigate('Settings')}>
+            <Text style={styles.settingsEmoji}>⚙️</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Stats */}
+        {/* Stats glass cards */}
         <View style={styles.statsRow}>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{kontrollen.length}</Text>
-            <Text style={styles.statLabel}>Gesamt</Text>
-          </View>
-          <View style={styles.statDivider} />
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>
-              {kontrollen.filter(k => k.synced).length}
-            </Text>
-            <Text style={styles.statLabel}>Synchronisiert</Text>
-          </View>
-          <View style={styles.statDivider} />
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>
-              {kontrollen.filter(k => k.artDesVerstosses && k.artDesVerstosses.trim()).length}
-            </Text>
-            <Text style={styles.statLabel}>Verstöße</Text>
-          </View>
+          {[
+            { value: kontrollen.length, label: 'Gesamt', icon: '📋' },
+            { value: synced, label: 'Synced', icon: '☁️' },
+            { value: totalVerstoesse, label: 'Verstöße', icon: '⚠️' },
+          ].map((s, i) => (
+            <View key={i} style={styles.statGlass}>
+              <Text style={styles.statIcon}>{s.icon}</Text>
+              <Text style={styles.statValue}>{s.value}</Text>
+              <Text style={styles.statLabel}>{s.label}</Text>
+            </View>
+          ))}
         </View>
       </View>
 
-      {/* Start Button */}
-      <View style={styles.startContainer}>
+      {/* CTA Button */}
+      <View style={styles.ctaWrapper}>
         <TouchableOpacity
-          style={styles.startButton}
+          style={styles.ctaButton}
           onPress={() => navigation.navigate('KontrolleForm')}
-          activeOpacity={0.85}
+          activeOpacity={0.88}
         >
-          <Text style={styles.startButtonIcon}>🎣</Text>
-          <Text style={styles.startButtonText}>Kontrolle starten</Text>
-          <Text style={styles.startButtonArrow}>→</Text>
+          <View style={styles.ctaInner}>
+            <View style={styles.ctaLeft}>
+              <View style={styles.ctaIconWrap}>
+                <Text style={styles.ctaIcon}>🎣</Text>
+              </View>
+              <View>
+                <Text style={styles.ctaTitle}>Kontrolle starten</Text>
+                <Text style={styles.ctaSub}>Neue Fischereikontrolle erfassen</Text>
+              </View>
+            </View>
+            <View style={styles.ctaArrow}>
+              <Text style={styles.ctaArrowText}>→</Text>
+            </View>
+          </View>
         </TouchableOpacity>
       </View>
 
-      {/* History */}
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>📋 Kontrollhistorie</Text>
+      {/* History section */}
+      <View style={styles.historyHeader}>
+        <Text style={styles.historyTitle}>Kontrollhistorie</Text>
         {kontrollen.length > 0 && (
-          <Text style={styles.sectionCount}>{kontrollen.length} Einträge</Text>
+          <View style={styles.historyBadge}>
+            <Text style={styles.historyBadgeText}>{kontrollen.length}</Text>
+          </View>
         )}
       </View>
 
       <ScrollView
         style={styles.list}
-        contentContainerStyle={kontrollen.length === 0 ? styles.emptyContainer : styles.listContent}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />
-        }
+        contentContainerStyle={kontrollen.length === 0 ? styles.emptyWrap : styles.listContent}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
         showsVerticalScrollIndicator={false}
       >
         {kontrollen.length === 0 ? (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyIcon}>🌊</Text>
+            <View style={styles.emptyIconWrap}>
+              <Text style={styles.emptyEmoji}>🌊</Text>
+            </View>
             <Text style={styles.emptyTitle}>Noch keine Kontrollen</Text>
-            <Text style={styles.emptyText}>
-              Starten Sie Ihre erste Fischereikontrolle mit dem Button oben.
-            </Text>
+            <Text style={styles.emptyText}>Starten Sie Ihre erste Fischereikontrolle mit dem Button oben.</Text>
           </View>
         ) : (
-          kontrollen.map((kontrolle) => (
+          kontrollen.map(k => (
             <KontrolleCard
-              key={kontrolle.id}
-              kontrolle={kontrolle}
-              onPress={() => navigation.navigate('KontrolleDetail', { kontrolleId: kontrolle.id })}
+              key={k.id}
+              kontrolle={k}
+              onPress={() => navigation.navigate('KontrolleDetail', { kontrolleId: k.id })}
             />
           ))
         )}
-        <View style={styles.listBottom} />
+        <View style={{ height: 32 }} />
       </ScrollView>
     </View>
   );
@@ -144,153 +134,158 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
   },
-  header: {
-    backgroundColor: colors.primary,
-    paddingTop: 50,
-    paddingBottom: 20,
+
+  // Hero
+  hero: {
+    paddingTop: 44,
+    paddingBottom: 24,
     paddingHorizontal: 20,
+    background: 'linear-gradient(160deg, #1a4a2e 0%, #0d2b18 100%)',
+    backgroundColor: '#1a4a2e',
+    position: 'relative',
+    overflow: 'hidden',
   },
-  headerContent: {
+  heroOverlay: {
+    position: 'absolute',
+    top: -60, right: -60,
+    width: 220, height: 220,
+    borderRadius: 110,
+    backgroundColor: 'rgba(200,168,75,0.10)',
+  },
+
+  // Top bar
+  topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 20,
+    alignItems: 'center',
+    marginBottom: 24,
   },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    letterSpacing: 0.5,
-  },
-  headerSubtitle: {
-    fontSize: 13,
-    color: 'rgba(255,255,255,0.75)',
-    marginTop: 2,
-  },
-  settingsButton: {
-    width: 40,
-    height: 40,
+  logoRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  logoIcon: {
+    width: 44, height: 44,
+    borderRadius: 14,
+    backgroundColor: 'rgba(200,168,75,0.20)',
+    borderWidth: 1,
+    borderColor: 'rgba(200,168,75,0.35)',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderRadius: 20,
   },
-  settingsIcon: {
-    fontSize: 20,
+  logoEmoji: { fontSize: 22 },
+  appTitle: { fontSize: 20, fontWeight: '800', color: '#fff', letterSpacing: 0.3 },
+  appSub: { fontSize: 11, color: 'rgba(255,255,255,0.55)', marginTop: 1 },
+  settingsBtn: {
+    width: 38, height: 38,
+    borderRadius: 19,
+    backgroundColor: 'rgba(255,255,255,0.10)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.15)',
+    alignItems: 'center', justifyContent: 'center',
   },
+  settingsEmoji: { fontSize: 18 },
+
+  // Stats
   statsRow: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    borderRadius: 12,
-    padding: 14,
+    gap: 10,
   },
-  statItem: {
+  statGlass: {
     flex: 1,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.14)',
+    paddingVertical: 14,
+    paddingHorizontal: 10,
     alignItems: 'center',
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)',
   },
-  statNumber: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: colors.accentLight,
-  },
-  statLabel: {
-    fontSize: 11,
-    color: 'rgba(255,255,255,0.75)',
-    marginTop: 2,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  statDivider: {
-    width: 1,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-  },
-  startContainer: {
+  statIcon: { fontSize: 18, marginBottom: 4 },
+  statValue: { fontSize: 24, fontWeight: '800', color: '#C8A84B', lineHeight: 28 },
+  statLabel: { fontSize: 10, color: 'rgba(255,255,255,0.55)', marginTop: 2, textTransform: 'uppercase', letterSpacing: 0.6 },
+
+  // CTA
+  ctaWrapper: {
     paddingHorizontal: 16,
     paddingTop: 16,
-    paddingBottom: 8,
+    paddingBottom: 4,
+    backgroundColor: '#0f2318',
   },
-  startButton: {
-    backgroundColor: colors.accent,
-    borderRadius: 14,
-    padding: 18,
+  ctaButton: {
+    borderRadius: 20,
+    overflow: 'hidden',
+    backgroundColor: '#C8A84B',
+    shadowColor: '#C8A84B',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.45,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  ctaInner: {
     flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: colors.accent,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 6,
-  },
-  startButtonIcon: {
-    fontSize: 24,
-    marginRight: 12,
-  },
-  startButtonText: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: colors.primaryDark,
-    letterSpacing: 0.5,
-  },
-  startButtonArrow: {
-    fontSize: 20,
-    color: colors.primaryDark,
-    fontWeight: 'bold',
-  },
-  sectionHeader: {
-    flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingVertical: 16,
+    paddingHorizontal: 18,
+  },
+  ctaLeft: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+  ctaIconWrap: {
+    width: 46, height: 46,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255,255,255,0.22)',
+    alignItems: 'center', justifyContent: 'center',
+  },
+  ctaIcon: { fontSize: 24 },
+  ctaTitle: { fontSize: 17, fontWeight: '800', color: '#1a3a20', letterSpacing: 0.2 },
+  ctaSub: { fontSize: 12, color: 'rgba(26,58,32,0.65)', marginTop: 2 },
+  ctaArrow: {
+    width: 34, height: 34,
+    borderRadius: 17,
+    backgroundColor: 'rgba(26,58,32,0.15)',
+    alignItems: 'center', justifyContent: 'center',
+  },
+  ctaArrowText: { fontSize: 18, fontWeight: 'bold', color: '#1a3a20' },
+
+  // History header
+  historyHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: 10,
     paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 8,
+    paddingTop: 20,
+    paddingBottom: 10,
+    backgroundColor: '#0f2318',
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: colors.primaryDark,
+  historyTitle: { fontSize: 15, fontWeight: '700', color: 'rgba(255,255,255,0.75)', letterSpacing: 0.5 },
+  historyBadge: {
+    backgroundColor: 'rgba(200,168,75,0.20)',
+    borderRadius: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
   },
-  sectionCount: {
-    fontSize: 13,
-    color: colors.textLight,
-    fontWeight: '500',
-  },
-  list: {
-    flex: 1,
-  },
-  listContent: {
-    paddingBottom: 20,
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 32,
-  },
-  emptyState: {
-    alignItems: 'center',
-    paddingTop: 40,
-  },
-  emptyIcon: {
-    fontSize: 60,
+  historyBadgeText: { fontSize: 12, fontWeight: '700', color: '#C8A84B' },
+
+  // List
+  list: { flex: 1, backgroundColor: 'transparent' },
+  listContent: { paddingBottom: 20 },
+  emptyWrap: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 32 },
+
+  // Empty state
+  emptyState: { alignItems: 'center', paddingTop: 60 },
+  emptyIconWrap: {
+    width: 80, height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.10)',
+    alignItems: 'center', justifyContent: 'center',
     marginBottom: 16,
   },
-  emptyTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: colors.textSecondary,
-    marginBottom: 8,
-  },
-  emptyText: {
-    fontSize: 14,
-    color: colors.textLight,
-    textAlign: 'center',
-    lineHeight: 22,
-  },
-  listBottom: {
-    height: 20,
-  },
+  emptyEmoji: { fontSize: 36 },
+  emptyTitle: { fontSize: 18, fontWeight: '700', color: 'rgba(255,255,255,0.75)', marginBottom: 8 },
+  emptyText: { fontSize: 14, color: 'rgba(255,255,255,0.35)', textAlign: 'center', lineHeight: 22 },
 });
 
 export default HomeScreen;
