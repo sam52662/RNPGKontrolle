@@ -32,89 +32,85 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
 
-      {/* Hero Header with gradient */}
-      <View style={styles.hero}>
-        <View style={styles.heroOverlay} />
-
-        {/* Top bar */}
-        <View style={styles.topBar}>
-          <View style={styles.logoRow}>
-            <View style={styles.logoIcon}>
-              <Text style={styles.logoEmoji}>🎣</Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <View style={styles.headerGlass}>
+          <View style={styles.headerTop}>
+            <View style={styles.logoWrap}>
+              <View style={styles.logoCircle}>
+                <Text style={styles.logoEmoji}>🎣</Text>
+              </View>
+              <View>
+                <Text style={styles.appName}>RNPG Kontrolle</Text>
+                <Text style={styles.appOrg}>Pachtgemeinschaft Kurpfalz e.V.</Text>
+              </View>
             </View>
-            <View>
-              <Text style={styles.appTitle}>RNPG Kontrolle</Text>
-              <Text style={styles.appSub}>Pachtgemeinschaft Kurpfalz e.V.</Text>
-            </View>
+            <TouchableOpacity style={styles.settingsCircle} onPress={() => navigation.navigate('Settings')}>
+              <Text style={styles.settingsEmoji}>⚙️</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.settingsBtn} onPress={() => navigation.navigate('Settings')}>
-            <Text style={styles.settingsEmoji}>⚙️</Text>
-          </TouchableOpacity>
-        </View>
 
-        {/* Stats glass cards */}
-        <View style={styles.statsRow}>
-          {[
-            { value: kontrollen.length, label: 'Gesamt', icon: '📋' },
-            { value: synced, label: 'Synced', icon: '☁️' },
-            { value: totalVerstoesse, label: 'Verstöße', icon: '⚠️' },
-          ].map((s, i) => (
-            <View key={i} style={styles.statGlass}>
-              <Text style={styles.statIcon}>{s.icon}</Text>
-              <Text style={styles.statValue}>{s.value}</Text>
-              <Text style={styles.statLabel}>{s.label}</Text>
-            </View>
-          ))}
+          {/* Stats row */}
+          <View style={styles.statsRow}>
+            {[
+              { value: kontrollen.length, label: 'Gesamt', icon: '📋', color: '#7ec8a0' },
+              { value: synced,            label: 'Synced',  icon: '☁️', color: '#6ab4f5' },
+              { value: totalVerstoesse,   label: 'Verstöße',icon: '⚠️', color: '#f5b942' },
+            ].map((s, i) => (
+              <View key={i} style={styles.statCard}>
+                <Text style={styles.statEmoji}>{s.icon}</Text>
+                <Text style={[styles.statNum, { color: s.color }]}>{s.value}</Text>
+                <Text style={styles.statLbl}>{s.label}</Text>
+              </View>
+            ))}
+          </View>
         </View>
       </View>
 
-      {/* CTA Button */}
-      <View style={styles.ctaWrapper}>
-        <TouchableOpacity
-          style={styles.ctaButton}
-          onPress={() => navigation.navigate('KontrolleForm')}
-          activeOpacity={0.88}
-        >
-          <View style={styles.ctaInner}>
-            <View style={styles.ctaLeft}>
-              <View style={styles.ctaIconWrap}>
-                <Text style={styles.ctaIcon}>🎣</Text>
-              </View>
-              <View>
-                <Text style={styles.ctaTitle}>Kontrolle starten</Text>
-                <Text style={styles.ctaSub}>Neue Fischereikontrolle erfassen</Text>
-              </View>
+      {/* CTA */}
+      <View style={styles.ctaZone}>
+        <TouchableOpacity style={styles.ctaBtn} onPress={() => navigation.navigate('KontrolleForm')} activeOpacity={0.85}>
+          <View style={styles.ctaLeft}>
+            <View style={styles.ctaIconBox}>
+              <Text style={styles.ctaIconEmoji}>🎣</Text>
             </View>
-            <View style={styles.ctaArrow}>
-              <Text style={styles.ctaArrowText}>→</Text>
+            <View>
+              <Text style={styles.ctaTitle}>Kontrolle starten</Text>
+              <Text style={styles.ctaSub}>Neue Fischereikontrolle erfassen</Text>
             </View>
+          </View>
+          <View style={styles.ctaChevron}>
+            <Text style={styles.ctaChevronText}>›</Text>
           </View>
         </TouchableOpacity>
       </View>
 
-      {/* History section */}
-      <View style={styles.historyHeader}>
-        <Text style={styles.historyTitle}>Kontrollhistorie</Text>
-        {kontrollen.length > 0 && (
-          <View style={styles.historyBadge}>
-            <Text style={styles.historyBadgeText}>{kontrollen.length}</Text>
-          </View>
-        )}
+      {/* History label */}
+      <View style={styles.histRow}>
+        <View style={styles.histLine} />
+        <View style={styles.histPill}>
+          <Text style={styles.histLabel}>KONTROLLHISTORIE</Text>
+          {kontrollen.length > 0 && <Text style={styles.histCount}>{kontrollen.length}</Text>}
+        </View>
+        <View style={styles.histLine} />
       </View>
 
+      {/* List */}
       <ScrollView
         style={styles.list}
-        contentContainerStyle={kontrollen.length === 0 ? styles.emptyWrap : styles.listContent}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
+        contentContainerStyle={kontrollen.length === 0 ? styles.emptyWrap : styles.listPad}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#C8A84B" />}
         showsVerticalScrollIndicator={false}
       >
         {kontrollen.length === 0 ? (
-          <View style={styles.emptyState}>
-            <View style={styles.emptyIconWrap}>
-              <Text style={styles.emptyEmoji}>🌊</Text>
+          <View style={styles.empty}>
+            <View style={styles.emptyRing}>
+              <View style={styles.emptyInner}>
+                <Text style={styles.emptyEmoji}>🌊</Text>
+              </View>
             </View>
             <Text style={styles.emptyTitle}>Noch keine Kontrollen</Text>
-            <Text style={styles.emptyText}>Starten Sie Ihre erste Fischereikontrolle mit dem Button oben.</Text>
+            <Text style={styles.emptyBody}>Starten Sie Ihre erste Fischereikontrolle mit dem Button oben.</Text>
           </View>
         ) : (
           kontrollen.map(k => (
@@ -125,166 +121,136 @@ const HomeScreen = ({ navigation }) => {
             />
           ))
         )}
-        <View style={{ height: 32 }} />
+        <View style={{ height: 40 }} />
       </ScrollView>
     </View>
   );
 };
 
+const G = {
+  glass: 'rgba(255,255,255,0.07)',
+  glassBorder: 'rgba(255,255,255,0.13)',
+  gold: '#C8A84B',
+  white75: 'rgba(255,255,255,0.75)',
+  white45: 'rgba(255,255,255,0.45)',
+  white25: 'rgba(255,255,255,0.25)',
+  white10: 'rgba(255,255,255,0.10)',
+  dark: 'rgba(5,15,10,0.55)',
+};
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'transparent',
-  },
+  container: { flex: 1, backgroundColor: 'transparent' },
 
-  // Hero
-  hero: {
-    paddingTop: 44,
-    paddingBottom: 24,
-    paddingHorizontal: 20,
-    backgroundColor: 'rgba(10, 31, 16, 0.75)',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  heroOverlay: {
-    position: 'absolute',
-    top: -60, right: -60,
-    width: 220, height: 220,
-    borderRadius: 110,
-    backgroundColor: 'rgba(200,168,75,0.10)',
-  },
-
-  // Top bar
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  logoRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  logoIcon: {
-    width: 44, height: 44,
-    borderRadius: 14,
-    backgroundColor: 'rgba(200,168,75,0.20)',
+  // ── Header ──────────────────────────────────────────────
+  header: { paddingTop: 48, paddingHorizontal: 16, paddingBottom: 0 },
+  headerGlass: {
+    backgroundColor: 'rgba(10,30,16,0.72)',
+    borderRadius: 24,
     borderWidth: 1,
-    borderColor: 'rgba(200,168,75,0.35)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderColor: G.glassBorder,
+    padding: 18,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 20,
+    elevation: 10,
   },
-  logoEmoji: { fontSize: 22 },
-  appTitle: { fontSize: 20, fontWeight: '800', color: '#fff', letterSpacing: 0.3 },
-  appSub: { fontSize: 11, color: 'rgba(255,255,255,0.55)', marginTop: 1 },
-  settingsBtn: {
-    width: 38, height: 38,
-    borderRadius: 19,
-    backgroundColor: 'rgba(255,255,255,0.10)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.15)',
+  headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+  logoWrap: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  logoCircle: {
+    width: 48, height: 48, borderRadius: 24,
+    backgroundColor: 'rgba(200,168,75,0.18)',
+    borderWidth: 1.5, borderColor: 'rgba(200,168,75,0.4)',
+    alignItems: 'center', justifyContent: 'center',
+    shadowColor: G.gold, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 8,
+  },
+  logoEmoji: { fontSize: 24 },
+  appName: { fontSize: 20, fontWeight: '800', color: '#fff', letterSpacing: 0.3 },
+  appOrg: { fontSize: 11, color: G.white45, marginTop: 1, letterSpacing: 0.2 },
+  settingsCircle: {
+    width: 40, height: 40, borderRadius: 20,
+    backgroundColor: G.glass, borderWidth: 1, borderColor: G.glassBorder,
     alignItems: 'center', justifyContent: 'center',
   },
   settingsEmoji: { fontSize: 18 },
 
   // Stats
-  statsRow: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  statGlass: {
-    flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.14)',
+  statsRow: { flexDirection: 'row', gap: 10 },
+  statCard: {
+    flex: 1, alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 16, borderWidth: 1, borderColor: G.glassBorder,
     paddingVertical: 14,
-    paddingHorizontal: 10,
-    alignItems: 'center',
-    backdropFilter: 'blur(12px)',
-    WebkitBackdropFilter: 'blur(12px)',
+    shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.2, shadowRadius: 6,
   },
-  statIcon: { fontSize: 18, marginBottom: 4 },
-  statValue: { fontSize: 24, fontWeight: '800', color: '#C8A84B', lineHeight: 28 },
-  statLabel: { fontSize: 10, color: 'rgba(255,255,255,0.55)', marginTop: 2, textTransform: 'uppercase', letterSpacing: 0.6 },
+  statEmoji: { fontSize: 20, marginBottom: 4 },
+  statNum: { fontSize: 26, fontWeight: '900', lineHeight: 30 },
+  statLbl: { fontSize: 9, color: G.white45, marginTop: 3, textTransform: 'uppercase', letterSpacing: 1 },
 
-  // CTA
-  ctaWrapper: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 4,
-    backgroundColor: 'transparent',
-  },
-  ctaButton: {
-    borderRadius: 20,
-    overflow: 'hidden',
-    backgroundColor: '#C8A84B',
-    shadowColor: '#C8A84B',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.45,
-    shadowRadius: 16,
+  // ── CTA ─────────────────────────────────────────────────
+  ctaZone: { paddingHorizontal: 16, paddingTop: 14, paddingBottom: 2 },
+  ctaBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    backgroundColor: G.gold,
+    borderRadius: 22, paddingVertical: 16, paddingHorizontal: 18,
+    shadowColor: G.gold, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.5, shadowRadius: 18,
     elevation: 8,
   },
-  ctaInner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 16,
-    paddingHorizontal: 18,
-  },
   ctaLeft: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  ctaIconWrap: {
-    width: 46, height: 46,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255,255,255,0.22)',
+  ctaIconBox: {
+    width: 50, height: 50, borderRadius: 16,
+    backgroundColor: 'rgba(255,255,255,0.20)',
     alignItems: 'center', justifyContent: 'center',
   },
-  ctaIcon: { fontSize: 24 },
-  ctaTitle: { fontSize: 17, fontWeight: '800', color: '#1a3a20', letterSpacing: 0.2 },
-  ctaSub: { fontSize: 12, color: 'rgba(26,58,32,0.65)', marginTop: 2 },
-  ctaArrow: {
-    width: 34, height: 34,
-    borderRadius: 17,
-    backgroundColor: 'rgba(26,58,32,0.15)',
+  ctaIconEmoji: { fontSize: 26 },
+  ctaTitle: { fontSize: 17, fontWeight: '800', color: '#1a3318', letterSpacing: 0.1 },
+  ctaSub: { fontSize: 12, color: 'rgba(26,51,24,0.65)', marginTop: 2 },
+  ctaChevron: {
+    width: 36, height: 36, borderRadius: 18,
+    backgroundColor: 'rgba(26,51,24,0.15)',
     alignItems: 'center', justifyContent: 'center',
   },
-  ctaArrowText: { fontSize: 18, fontWeight: 'bold', color: '#1a3a20' },
+  ctaChevronText: { fontSize: 22, fontWeight: '700', color: '#1a3318', lineHeight: 28 },
 
-  // History header
-  historyHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 10,
-    backgroundColor: 'transparent',
+  // ── History divider ──────────────────────────────────────
+  histRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingTop: 20, paddingBottom: 8, gap: 10 },
+  histLine: { flex: 1, height: 1, backgroundColor: 'rgba(255,255,255,0.12)' },
+  histPill: {
+    flexDirection: 'row', alignItems: 'center', gap: 8,
+    backgroundColor: 'rgba(10,30,16,0.65)',
+    borderRadius: 20, paddingHorizontal: 14, paddingVertical: 5,
+    borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)',
   },
-  historyTitle: { fontSize: 15, fontWeight: '700', color: 'rgba(255,255,255,0.75)', letterSpacing: 0.5 },
-  historyBadge: {
-    backgroundColor: 'rgba(200,168,75,0.20)',
-    borderRadius: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
+  histLabel: { fontSize: 10, fontWeight: '700', color: G.white45, letterSpacing: 1.2 },
+  histCount: {
+    fontSize: 11, fontWeight: '800', color: G.gold,
+    backgroundColor: 'rgba(200,168,75,0.15)',
+    paddingHorizontal: 7, paddingVertical: 1, borderRadius: 8,
   },
-  historyBadgeText: { fontSize: 12, fontWeight: '700', color: '#C8A84B' },
 
-  // List
+  // ── List ────────────────────────────────────────────────
   list: { flex: 1, backgroundColor: 'transparent' },
-  listContent: { paddingBottom: 20 },
+  listPad: { paddingTop: 4 },
   emptyWrap: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 32 },
 
   // Empty state
-  emptyState: { alignItems: 'center', paddingTop: 60 },
-  emptyIconWrap: {
-    width: 80, height: 80,
-    borderRadius: 40,
-    backgroundColor: 'rgba(255,255,255,0.06)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.10)',
+  empty: { alignItems: 'center', paddingTop: 20 },
+  emptyRing: {
+    width: 100, height: 100, borderRadius: 50,
+    borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.15)',
     alignItems: 'center', justifyContent: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
+    backgroundColor: 'rgba(10,30,16,0.5)',
+    shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12,
+  },
+  emptyInner: {
+    width: 72, height: 72, borderRadius: 36,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    alignItems: 'center', justifyContent: 'center',
   },
   emptyEmoji: { fontSize: 36 },
-  emptyTitle: { fontSize: 18, fontWeight: '700', color: 'rgba(255,255,255,0.75)', marginBottom: 8 },
-  emptyText: { fontSize: 14, color: 'rgba(255,255,255,0.35)', textAlign: 'center', lineHeight: 22 },
+  emptyTitle: { fontSize: 20, fontWeight: '800', color: G.white75, marginBottom: 10, letterSpacing: 0.2 },
+  emptyBody: { fontSize: 14, color: G.white45, textAlign: 'center', lineHeight: 22 },
 });
 
 export default HomeScreen;
