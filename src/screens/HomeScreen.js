@@ -71,21 +71,21 @@ const HomeScreen = ({ navigation }) => {
         {/* ── Stats ── */}
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
-            <View style={[styles.statIconBg, { backgroundColor: 'rgba(255,255,255,0.1)' }]}>
+            <View style={[styles.statIconBg, { backgroundColor: 'transparent' }]}>
               <Image source={{ uri: ICON_CLIPBOARD }} style={styles.statIconImg} />
             </View>
             <Text style={[styles.statNum, { color: '#fff' }]}>{kontrollen.length}</Text>
             <Text style={styles.statLabel}>Gesamt</Text>
           </View>
           <View style={styles.statCard}>
-            <View style={[styles.statIconBg, { backgroundColor: 'rgba(91,200,245,0.12)' }]}>
+            <View style={[styles.statIconBg, { backgroundColor: 'transparent' }]}>
               <Image source={{ uri: ICON_CLOUD }} style={styles.statIconImg} />
             </View>
             <Text style={[styles.statNum, { color: '#5bc8f5' }]}>{synced}</Text>
             <Text style={styles.statLabel}>Synced</Text>
           </View>
           <View style={styles.statCard}>
-            <View style={[styles.statIconBg, { backgroundColor: 'rgba(245,166,35,0.12)' }]}>
+            <View style={[styles.statIconBg, { backgroundColor: 'transparent' }]}>
               <Image source={{ uri: ICON_WARNING }} style={styles.statIconImg} />
             </View>
             <Text style={[styles.statNum, { color: '#f5a623' }]}>{totalVerstoesse}</Text>
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     paddingVertical: 18, paddingHorizontal: 6,
   },
   statIconBg: {
-    width: 52, height: 52, borderRadius: 16,
+    width: 52, height: 52, borderRadius: 26,
     alignItems: 'center', justifyContent: 'center',
     marginBottom: 10,
   },
