@@ -165,13 +165,10 @@ const styles = StyleSheet.create({
   },
   headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   appIconBox: {
-    width: 56, height: 56, borderRadius: 14,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.3)',
+    width: 56, height: 56,
     alignItems: 'center', justifyContent: 'center',
-    padding: 8,
   },
-  appIconImg: { width: 38, height: 38 },
+  appIconImg: { width: 56, height: 56 },
   headerDivider: { width: 1.5, height: 40, backgroundColor: 'rgba(255,255,255,0.35)', marginHorizontal: 2 },
   appName: { fontSize: 22, fontWeight: '900', color: '#fff', letterSpacing: 0.2 },
   appOrg: { fontSize: 12, color: 'rgba(255,255,255,0.65)', marginTop: 2 },
@@ -241,7 +238,7 @@ const styles = StyleSheet.create({
   emptyBody: { fontSize: 15, color: 'rgba(255,255,255,0.6)', textAlign: 'center', lineHeight: 24 },
 
   contactBox: {
-    marginHorizontal: 16, marginTop: 24,
+    marginHorizontal: 16, marginTop: 48,
     backgroundColor: 'rgba(0,0,0,0.25)',
     borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)',
     paddingVertical: 14, paddingHorizontal: 16,
