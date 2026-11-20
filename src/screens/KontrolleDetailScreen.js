@@ -5,56 +5,54 @@ import {
 } from 'react-native';
 import { getKontrolleById, getAllKontrollen, deleteKontrolle } from '../services/storage';
 import { syncKontrolleToGithub, getGithubToken } from '../services/githubSync';
-import { colors } from '../theme/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const DetailRow = ({ icon, label, value }) => {
+const Row = ({ icon, label, value }) => {
   if (!value && value !== 0) return null;
   return (
-    <View style={styles.detailRow}>
-      <Text style={styles.detailIcon}>{icon}</Text>
-      <View style={styles.detailContent}>
-        <Text style={styles.detailLabel}>{label}</Text>
-        <Text style={styles.detailValue}>{String(value)}</Text>
+    <View style={styles.row}>
+      <Text style={styles.rowIcon}>{icon}</Text>
+      <View style={styles.rowContent}>
+        <Text style={styles.rowLabel}>{label}</Text>
+        <Text style={styles.rowValue}>{String(value)}</Text>
       </View>
     </View>
   );
 };
+
+const Section = ({ title, children }) => (
+  <View style={styles.section}>
+    <Text style={styles.sectionTitle}>{title}</Text>
+    {children}
+  </View>
+);
 
 const KontrolleDetailScreen = ({ route, navigation }) => {
   const { kontrolleId } = route.params;
   const [kontrolle, setKontrolle] = useState(null);
   const [syncing, setSyncing] = useState(false);
 
-  useEffect(() => {
-    loadKontrolle();
-  }, []);
+  useEffect(() => { load(); }, []);
 
-  const loadKontrolle = async () => {
-    const k = await getKontrolleById(kontrolleId);
-    setKontrolle(k);
-  };
+  const load = async () => setKontrolle(await getKontrolleById(kontrolleId));
 
   const handleSync = async () => {
     setSyncing(true);
     try {
       const token = await getGithubToken();
       if (!token) {
-        Alert.alert('Token fehlt', 'Bitte zuerst GitHub Token in den Einstellungen konfigurieren.', [
+        Alert.alert('Token fehlt', 'Bitte GitHub Token konfigurieren.', [
           { text: 'Einstellungen', onPress: () => navigation.navigate('Settings') },
           { text: 'Abbrechen', style: 'cancel' },
         ]);
-        setSyncing(false);
-        return;
+        setSyncing(false); return;
       }
       const result = await syncKontrolleToGithub(kontrolle, token);
       const all = await getAllKontrollen();
-      const updated = all.map(k =>
-        k.id === kontrolle.id ? { ...k, synced: true, syncedFile: result.fileName } : k
-      );
+      const updated = all.map(k => k.id === kontrolle.id ? { ...k, synced: true, syncedFile: result.fileName } : k);
       await AsyncStorage.setItem('rnpg_kontrollen', JSON.stringify(updated));
-      setKontrolle(prev => ({ ...prev, synced: true, syncedFile: result.fileName }));
-      Alert.alert('✅ Synchronisiert', `Gespeichert in: ${result.fileName}`);
+      setKontrolle(p => ({ ...p, synced: true, syncedFile: result.fileName }));
+      Alert.alert('Synchronisiert', `Gespeichert in: ${result.fileName}`);
     } catch (e) {
       Alert.alert('Fehler', e.message || 'Synchronisierung fehlgeschlagen.');
     }
@@ -62,108 +60,72 @@ const KontrolleDetailScreen = ({ route, navigation }) => {
   };
 
   const handleDelete = () => {
-    Alert.alert(
-      'Kontrolle löschen',
-      'Möchten Sie diese Kontrolle wirklich löschen?',
-      [
-        { text: 'Abbrechen', style: 'cancel' },
-        {
-          text: 'Löschen',
-          style: 'destructive',
-          onPress: async () => {
-            await deleteKontrolle(kontrolleId);
-            navigation.goBack();
-          },
-        },
-      ]
-    );
+    Alert.alert('Löschen', 'Kontrolle wirklich löschen?', [
+      { text: 'Abbrechen', style: 'cancel' },
+      { text: 'Löschen', style: 'destructive', onPress: async () => { await deleteKontrolle(kontrolleId); navigation.goBack(); } },
+    ]);
   };
 
-  if (!kontrolle) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.primary} />
-      </View>
-    );
-  }
+  if (!kontrolle) return (
+    <View style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
+      <ActivityIndicator size="large" color="#C8A84B" />
+    </View>
+  );
 
-  const formattedDate = kontrolle.datum
-    ? new Date(kontrolle.datum).toLocaleDateString('de-DE', {
-        weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
-      })
+  const dateStr = kontrolle.datum
+    ? new Date(kontrolle.datum).toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })
     : 'Kein Datum';
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
-
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backIcon}>←</Text>
+        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+          <Text style={styles.backText}>←</Text>
         </TouchableOpacity>
         <View style={styles.headerCenter}>
           <Text style={styles.headerTitle}>Kontrolle</Text>
-          <Text style={styles.headerDate}>{formattedDate}</Text>
+          <Text style={styles.headerSub}>{dateStr}</Text>
         </View>
-        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-          <Text style={styles.deleteIcon}>🗑️</Text>
+        <TouchableOpacity style={styles.deleteBtn} onPress={handleDelete}>
+          <Text style={styles.deleteText}>🗑️</Text>
         </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-        {/* Status */}
-        <View style={styles.statusCard}>
-          <View style={[styles.statusDot, { backgroundColor: kontrolle.synced ? colors.success : colors.warning }]} />
-          <Text style={styles.statusText}>
-            {kontrolle.synced
-              ? `Synchronisiert${kontrolle.syncedFile ? ` → ${kontrolle.syncedFile}` : ''}`
-              : 'Noch nicht synchronisiert'}
+        {/* Status pill */}
+        <View style={[styles.statusPill, kontrolle.synced ? styles.pillSynced : styles.pillLocal]}>
+          <View style={[styles.dot, { backgroundColor: kontrolle.synced ? '#4cd97b' : '#C8A84B' }]} />
+          <Text style={[styles.pillText, { color: kontrolle.synced ? '#4cd97b' : '#C8A84B' }]}>
+            {kontrolle.synced ? `Synchronisiert${kontrolle.syncedFile ? ' → ' + kontrolle.syncedFile : ''}` : 'Noch nicht synchronisiert'}
           </Text>
         </View>
 
-        {/* Details */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>📋 Allgemein</Text>
-          <DetailRow icon="👤" label="Kontrolleur" value={kontrolle.kontrolleur} />
-          <DetailRow icon="🛤️" label="Strecke" value={kontrolle.strecke} />
-          <DetailRow icon="📍" label="Streckenabschnitt" value={kontrolle.streckenabschnitt} />
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>🎣 Kontrolle</Text>
-          <DetailRow icon="👥" label="Kontrollierte Angler" value={kontrolle.kontrollierteAngler} />
-          <DetailRow icon="⚠️" label="Art des Verstoßes" value={kontrolle.artDesVerstosses} />
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>🌤️ Wetter & Ufer</Text>
-          <DetailRow icon="☁️" label="Wetter" value={kontrolle.wetter} />
-          <DetailRow icon="🗑️" label="Ufer vermüllt" value={kontrolle.uferVermullt} />
-          <DetailRow icon="🌿" label="Ufer Sonstiges" value={kontrolle.uferSonstiges} />
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>📝 Zusatz</Text>
-          <DetailRow icon="💧" label="Besonderheiten Gewässer" value={kontrolle.besonderheitenGewaesser} />
-          <DetailRow icon="💬" label="Bemerkungen" value={kontrolle.bemerkungen} />
-        </View>
+        <Section title="📋 Allgemein">
+          <Row icon="👤" label="Kontrolleur" value={kontrolle.kontrolleur} />
+          <Row icon="🛤️" label="Strecke" value={kontrolle.strecke} />
+          <Row icon="📍" label="Streckenabschnitt" value={kontrolle.streckenabschnitt} />
+        </Section>
+        <Section title="🎣 Kontrolle">
+          <Row icon="👥" label="Kontrollierte Angler" value={kontrolle.kontrollierteAngler} />
+          <Row icon="⚠️" label="Art des Verstoßes" value={kontrolle.artDesVerstosses} />
+        </Section>
+        <Section title="🌤️ Wetter & Ufer">
+          <Row icon="☁️" label="Wetter" value={kontrolle.wetter} />
+          <Row icon="🗑️" label="Ufer vermüllt" value={kontrolle.uferVermullt} />
+          <Row icon="🌿" label="Ufer Sonstiges" value={kontrolle.uferSonstiges} />
+        </Section>
+        <Section title="📝 Zusatz">
+          <Row icon="💧" label="Besonderheiten Gewässer" value={kontrolle.besonderheitenGewaesser} />
+          <Row icon="💬" label="Bemerkungen" value={kontrolle.bemerkungen} />
+        </Section>
 
         {!kontrolle.synced && (
-          <TouchableOpacity
-            style={[styles.syncButton, syncing && styles.buttonDisabled]}
-            onPress={handleSync}
-            disabled={syncing}
-            activeOpacity={0.85}
-          >
-            {syncing ? (
-              <ActivityIndicator color="#FFFFFF" size="small" />
-            ) : (
-              <Text style={styles.syncIcon}>☁️</Text>
-            )}
+          <TouchableOpacity style={[styles.syncBtn, syncing && styles.btnDisabled]} onPress={handleSync} disabled={syncing} activeOpacity={0.82}>
+            {syncing ? <ActivityIndicator color="#1a3a20" size="small" /> : <Text style={styles.syncIcon}>☁️</Text>}
             <Text style={styles.syncText}>Mit GitHub synchronisieren</Text>
           </TouchableOpacity>
         )}
-
         <View style={{ height: 40 }} />
       </ScrollView>
     </View>
@@ -171,91 +133,53 @@ const KontrolleDetailScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  loadingContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background },
+  container: { flex: 1, backgroundColor: 'transparent' },
   header: {
-    backgroundColor: colors.primary,
-    paddingTop: 50,
-    paddingBottom: 16,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
+    backgroundColor: '#1a4a2e', paddingTop: 50, paddingBottom: 16, paddingHorizontal: 16,
+    flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.08)',
   },
-  backButton: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  backIcon: { fontSize: 24, color: '#FFFFFF', fontWeight: 'bold' },
+  backBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  backText: { fontSize: 24, color: '#fff', fontWeight: 'bold' },
   headerCenter: { flex: 1, alignItems: 'center' },
-  headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#FFFFFF' },
-  headerDate: { fontSize: 12, color: 'rgba(255,255,255,0.75)', marginTop: 2 },
-  deleteButton: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  deleteIcon: { fontSize: 20 },
-  scroll: { flex: 1 },
-  statusCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    marginHorizontal: 16,
-    marginTop: 16,
-    borderRadius: 10,
-    padding: 14,
-    gap: 10,
-    shadowColor: colors.primaryDark,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.07,
-    shadowRadius: 4,
-    elevation: 2,
+  headerTitle: { fontSize: 18, fontWeight: '800', color: '#fff' },
+  headerSub: { fontSize: 11, color: 'rgba(255,255,255,0.45)', marginTop: 1 },
+  deleteBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  deleteText: { fontSize: 20 },
+  scroll: { flex: 1, backgroundColor: 'transparent' },
+  statusPill: {
+    flexDirection: 'row', alignItems: 'center', gap: 8,
+    marginHorizontal: 16, marginTop: 16,
+    paddingHorizontal: 14, paddingVertical: 10,
+    borderRadius: 14, borderWidth: 1,
   },
-  statusDot: { width: 10, height: 10, borderRadius: 5 },
-  statusText: { fontSize: 14, color: colors.textSecondary, fontWeight: '500' },
-  card: {
-    backgroundColor: colors.surface,
-    marginHorizontal: 16,
-    marginTop: 12,
-    borderRadius: 14,
-    padding: 16,
-    shadowColor: colors.primaryDark,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 2,
+  pillSynced: { backgroundColor: 'rgba(39,174,96,0.08)', borderColor: 'rgba(39,174,96,0.20)' },
+  pillLocal: { backgroundColor: 'rgba(200,168,75,0.08)', borderColor: 'rgba(200,168,75,0.20)' },
+  dot: { width: 8, height: 8, borderRadius: 4 },
+  pillText: { fontSize: 13, fontWeight: '600' },
+  section: {
+    marginHorizontal: 16, marginTop: 12,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.09)', padding: 16,
   },
-  cardTitle: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: colors.primary,
-    marginBottom: 12,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderLight,
+  sectionTitle: {
+    fontSize: 13, fontWeight: '700', color: 'rgba(255,255,255,0.5)',
+    marginBottom: 12, paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.07)',
+    textTransform: 'uppercase', letterSpacing: 0.6,
   },
-  detailRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 10,
-    gap: 10,
-  },
-  detailIcon: { fontSize: 16, marginTop: 1 },
-  detailContent: { flex: 1 },
-  detailLabel: { fontSize: 11, color: colors.textLight, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 },
-  detailValue: { fontSize: 15, color: colors.text, fontWeight: '500' },
-  syncButton: {
-    backgroundColor: colors.primary,
-    marginHorizontal: 16,
-    marginTop: 20,
-    borderRadius: 14,
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    shadowColor: colors.primaryDark,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+  row: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, marginBottom: 10 },
+  rowIcon: { fontSize: 16, marginTop: 1 },
+  rowContent: { flex: 1 },
+  rowLabel: { fontSize: 10, color: 'rgba(255,255,255,0.35)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 },
+  rowValue: { fontSize: 15, color: 'rgba(255,255,255,0.85)', fontWeight: '500' },
+  syncBtn: {
+    marginHorizontal: 16, marginTop: 20,
+    backgroundColor: '#C8A84B', borderRadius: 16, padding: 16,
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
+    shadowColor: '#C8A84B', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.4, shadowRadius: 12, elevation: 6,
   },
   syncIcon: { fontSize: 20 },
-  syncText: { fontSize: 16, fontWeight: 'bold', color: '#FFFFFF' },
-  buttonDisabled: { opacity: 0.6 },
+  syncText: { fontSize: 16, fontWeight: '800', color: '#1a3a20' },
+  btnDisabled: { opacity: 0.55 },
 });
 
 export default KontrolleDetailScreen;

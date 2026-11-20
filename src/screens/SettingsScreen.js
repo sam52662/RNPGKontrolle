@@ -6,10 +6,8 @@ import {
 import { getGithubToken, setGithubToken, getExistingFiles } from '../services/githubSync';
 import { getAllKontrollen } from '../services/storage';
 import { exportToLocalXlsx } from '../services/githubSync';
-import { colors } from '../theme/colors';
 
 const SettingsScreen = ({ navigation }) => {
-  const [token, setToken] = useState('');
   const [tokenInput, setTokenInput] = useState('');
   const [tokenSaved, setTokenSaved] = useState(false);
   const [testing, setTesting] = useState(false);
@@ -17,43 +15,32 @@ const SettingsScreen = ({ navigation }) => {
   const [exporting, setExporting] = useState(false);
   const [files, setFiles] = useState([]);
 
-  useEffect(() => {
-    loadToken();
-  }, []);
+  useEffect(() => { loadToken(); }, []);
 
   const loadToken = async () => {
     const t = await getGithubToken();
-    if (t) {
-      setToken(t);
-      setTokenInput(t.slice(0, 8) + '•'.repeat(Math.max(0, t.length - 8)));
-      setTokenSaved(true);
-    }
+    if (t) { setTokenInput(t.slice(0, 8) + '•'.repeat(Math.max(0, t.length - 8))); setTokenSaved(true); }
   };
 
   const handleSaveToken = async () => {
     const trimmed = tokenInput.trim();
-    if (!trimmed || trimmed.includes('•')) {
-      Alert.alert('Token eingeben', 'Bitte geben Sie einen neuen GitHub Token ein.');
-      return;
-    }
+    if (!trimmed || trimmed.includes('•')) { Alert.alert('Token eingeben', 'Bitte neuen GitHub Token eingeben.'); return; }
     await setGithubToken(trimmed);
-    setToken(trimmed);
     setTokenSaved(true);
     setTokenInput(trimmed.slice(0, 8) + '•'.repeat(Math.max(0, trimmed.length - 8)));
-    Alert.alert('✅ Token gespeichert');
+    Alert.alert('Token gespeichert');
   };
 
-  const handleTestConnection = async () => {
+  const handleTest = async () => {
     const t = await getGithubToken();
     if (!t) { Alert.alert('Kein Token', 'Bitte zuerst Token speichern.'); return; }
-    setTesting(true);
-    setTestResult(null);
+    setTesting(true); setTestResult(null);
     try {
       const result = await getExistingFiles(t);
       setFiles(result);
-      setTestResult({ success: true, message: `Verbindung OK — ${result.length} Datei(en) gefunden` });
+      setTestResult({ ok: true, msg: `Verbindung OK — ${result.length} Datei(en) gefunden` });
     } catch (e) {
-      setTestResult({ success: false, message: e.message || 'Verbindung fehlgeschlagen' });
+      setTestResult({ ok: false, msg: e.message || 'Verbindung fehlgeschlagen' });
     }
     setTesting(false);
   };
@@ -62,135 +49,102 @@ const SettingsScreen = ({ navigation }) => {
     setExporting(true);
     try {
       const kontrollen = await getAllKontrollen();
-      if (kontrollen.length === 0) {
-        Alert.alert('Keine Daten', 'Es gibt noch keine Kontrollen zum Exportieren.');
-        setExporting(false);
-        return;
-      }
+      if (!kontrollen.length) { Alert.alert('Keine Daten', 'Noch keine Kontrollen zum Exportieren.'); setExporting(false); return; }
       await exportToLocalXlsx(kontrollen);
-    } catch (e) {
-      Alert.alert('Export Fehler', e.message || 'Export fehlgeschlagen.');
-    }
+    } catch (e) { Alert.alert('Export Fehler', e.message || 'Fehlgeschlagen.'); }
     setExporting(false);
   };
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.primaryDark} />
-
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backIcon}>←</Text>
+        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+          <Text style={styles.backText}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Einstellungen</Text>
-        <View style={styles.backButton} />
+        <View style={styles.backBtn} />
       </View>
 
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
+
         {/* GitHub Token */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🔑 GitHub Konfiguration</Text>
-          <Text style={styles.sectionDesc}>
-            Erstellen Sie einen Personal Access Token auf GitHub (Settings → Developer Settings → Personal Access Tokens) mit dem Scope "repo".
-          </Text>
-
+          <View style={styles.sectionHead}>
+            <Text style={styles.sectionIcon}>🔑</Text>
+            <Text style={styles.sectionTitle}>GitHub Konfiguration</Text>
+          </View>
+          <Text style={styles.desc}>Personal Access Token mit Scope <Text style={styles.code}>repo</Text> oder Contents read+write (Fine-grained).</Text>
           <Text style={styles.label}>GitHub Token</Text>
           <TextInput
             style={styles.input}
             value={tokenInput}
-            onChangeText={(v) => { setTokenInput(v); setTokenSaved(false); }}
-            placeholder="ghp_xxxxxxxxxxxx"
-            placeholderTextColor={colors.textLight}
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={false}
+            onChangeText={v => { setTokenInput(v); setTokenSaved(false); }}
+            placeholder="github_pat_... oder ghp_..."
+            placeholderTextColor="rgba(255,255,255,0.25)"
+            autoCapitalize="none" autoCorrect={false}
           />
-
-          <TouchableOpacity style={styles.button} onPress={handleSaveToken}>
-            <Text style={styles.buttonIcon}>💾</Text>
-            <Text style={styles.buttonText}>Token speichern</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.buttonOutline, testing && styles.buttonDisabled]}
-            onPress={handleTestConnection}
-            disabled={testing}
-          >
-            {testing ? (
-              <ActivityIndicator size="small" color={colors.primary} />
-            ) : (
-              <Text style={styles.buttonIcon}>🔗</Text>
-            )}
-            <Text style={styles.buttonOutlineText}>Verbindung testen</Text>
-          </TouchableOpacity>
-
+          <View style={styles.btnRow}>
+            <TouchableOpacity style={styles.btnPrimary} onPress={handleSaveToken}>
+              <Text style={styles.btnPrimaryText}>💾 Speichern</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.btnOutline, testing && styles.btnDisabled]} onPress={handleTest} disabled={testing}>
+              {testing ? <ActivityIndicator size="small" color="#C8A84B" /> : <Text style={styles.btnOutlineText}>🔗 Testen</Text>}
+            </TouchableOpacity>
+          </View>
           {testResult && (
-            <View style={[styles.resultBox, { borderColor: testResult.success ? colors.success : colors.error }]}>
-              <Text style={[styles.resultText, { color: testResult.success ? colors.success : colors.error }]}>
-                {testResult.success ? '✅' : '❌'} {testResult.message}
+            <View style={[styles.result, testResult.ok ? styles.resultOk : styles.resultErr]}>
+              <Text style={[styles.resultText, { color: testResult.ok ? '#4cd97b' : '#ff6b6b' }]}>
+                {testResult.ok ? '✅ ' : '❌ '}{testResult.msg}
               </Text>
             </View>
           )}
-
           {files.length > 0 && (
             <View style={styles.fileList}>
-              <Text style={styles.fileListTitle}>📁 Dateien im Repository:</Text>
-              {files.map((f) => (
-                <Text key={f.name} style={styles.fileName}>• {f.name}</Text>
-              ))}
+              <Text style={styles.fileListTitle}>Dateien im Repository:</Text>
+              {files.map(f => <Text key={f.name} style={styles.fileName}>• {f.name}</Text>)}
             </View>
           )}
         </View>
 
-        {/* Repository Info */}
+        {/* Repo Info */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>ℹ️ Repository Info</Text>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Repository</Text>
-            <Text style={styles.infoValue}>sam52662/RNPGKontrolle</Text>
+          <View style={styles.sectionHead}>
+            <Text style={styles.sectionIcon}>ℹ️</Text>
+            <Text style={styles.sectionTitle}>Repository Info</Text>
           </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Branch</Text>
-            <Text style={styles.infoValue}>main</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Template</Text>
-            <Text style={styles.infoValue}>Protokoll_Fischereiaufsicht.xlsx</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Zeilen pro Datei</Text>
-            <Text style={styles.infoValue}>9 (Zeilen 12–20)</Text>
-          </View>
+          {[
+            ['Repository', 'sam52662/RNPGKontrolle'],
+            ['Branch', 'main'],
+            ['Template', 'Protokoll_Fischereiaufsicht.xlsx'],
+            ['Zeilen pro Datei', '9 (Zeilen 12–20)'],
+          ].map(([k, v]) => (
+            <View key={k} style={styles.infoRow}>
+              <Text style={styles.infoKey}>{k}</Text>
+              <Text style={styles.infoVal}>{v}</Text>
+            </View>
+          ))}
         </View>
 
         {/* Export */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📤 Export</Text>
-          <Text style={styles.sectionDesc}>
-            Alle lokalen Kontrollen als Excel-Datei exportieren und teilen.
-          </Text>
-          <TouchableOpacity
-            style={[styles.button, exporting && styles.buttonDisabled]}
-            onPress={handleExport}
-            disabled={exporting}
-          >
-            {exporting ? (
-              <ActivityIndicator size="small" color={colors.primaryDark} />
-            ) : (
-              <Text style={styles.buttonIcon}>📊</Text>
-            )}
-            <Text style={styles.buttonText}>Excel exportieren & teilen</Text>
+          <View style={styles.sectionHead}>
+            <Text style={styles.sectionIcon}>📤</Text>
+            <Text style={styles.sectionTitle}>Export</Text>
+          </View>
+          <Text style={styles.desc}>Alle lokalen Kontrollen als Excel-Datei exportieren und teilen.</Text>
+          <TouchableOpacity style={[styles.btnPrimary, exporting && styles.btnDisabled]} onPress={handleExport} disabled={exporting}>
+            {exporting ? <ActivityIndicator size="small" color="#1a3a20" /> : <Text style={styles.btnPrimaryText}>📊 Excel exportieren & teilen</Text>}
           </TouchableOpacity>
         </View>
 
         {/* About */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🐟 Über die App</Text>
-          <Text style={styles.aboutText}>
-            RNPG Kontrolle — Fischereikontrolle App{'\n'}
-            Pachtgemeinschaft Kurpfalz e.V.{'\n\n'}
-            Die App ermöglicht die digitale Erfassung von Fischereikontrollen gemäß dem offiziellen Protokoll der Fischereiaufsicht und synchronisiert die Daten automatisch mit GitHub.
-          </Text>
+          <View style={styles.sectionHead}>
+            <Text style={styles.sectionIcon}>🐟</Text>
+            <Text style={styles.sectionTitle}>Über die App</Text>
+          </View>
+          <Text style={styles.about}>RNPG Kontrolle — Fischereikontrolle App{'\n'}Pachtgemeinschaft Kurpfalz e.V.{'\n\n'}Digitale Erfassung von Fischereikontrollen gemäß offiziellem Protokoll der Fischereiaufsicht mit automatischer GitHub-Synchronisierung.</Text>
         </View>
 
         <View style={{ height: 40 }} />
@@ -200,118 +154,55 @@ const SettingsScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
+  container: { flex: 1, backgroundColor: 'transparent' },
   header: {
-    backgroundColor: colors.primary,
-    paddingTop: 50,
-    paddingBottom: 16,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
+    backgroundColor: '#1a4a2e', paddingTop: 50, paddingBottom: 16, paddingHorizontal: 16,
+    flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.08)',
   },
-  backButton: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  backIcon: { fontSize: 24, color: '#FFFFFF', fontWeight: 'bold' },
-  headerTitle: { flex: 1, fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', textAlign: 'center' },
-  scroll: { flex: 1 },
+  backBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  backText: { fontSize: 24, color: '#fff', fontWeight: 'bold' },
+  headerTitle: { flex: 1, fontSize: 18, fontWeight: '800', color: '#fff', textAlign: 'center' },
+  scroll: { flex: 1, backgroundColor: 'transparent' },
   section: {
-    backgroundColor: colors.surface,
-    marginHorizontal: 16,
-    marginTop: 16,
-    borderRadius: 14,
-    padding: 16,
-    shadowColor: colors.primaryDark,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 2,
+    marginHorizontal: 16, marginTop: 16,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.09)', padding: 16,
   },
-  sectionTitle: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: colors.primary,
-    marginBottom: 10,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderLight,
-  },
-  sectionDesc: {
-    fontSize: 13,
-    color: colors.textSecondary,
-    lineHeight: 20,
-    marginBottom: 14,
-  },
-  label: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: colors.textSecondary,
-    marginBottom: 8,
-  },
+  sectionHead: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12, paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.07)' },
+  sectionIcon: { fontSize: 16 },
+  sectionTitle: { fontSize: 14, fontWeight: '700', color: 'rgba(255,255,255,0.75)', letterSpacing: 0.4 },
+  desc: { fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 20, marginBottom: 14 },
+  code: { color: '#C8A84B', fontFamily: 'monospace' },
+  label: { fontSize: 11, fontWeight: '600', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 7 },
   input: {
-    backgroundColor: colors.background,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 14,
-    color: colors.text,
-    marginBottom: 12,
-    fontFamily: 'monospace',
+    backgroundColor: 'rgba(255,255,255,0.07)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)',
+    borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12, fontSize: 14, color: '#fff',
+    marginBottom: 12, fontFamily: 'monospace',
   },
-  button: {
-    backgroundColor: colors.accent,
-    borderRadius: 10,
-    padding: 13,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    marginBottom: 10,
+  btnRow: { flexDirection: 'row', gap: 10 },
+  btnPrimary: {
+    flex: 1, backgroundColor: '#C8A84B', borderRadius: 12, padding: 13,
+    alignItems: 'center', justifyContent: 'center',
+    shadowColor: '#C8A84B', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.35, shadowRadius: 8, elevation: 4,
   },
-  buttonText: { fontSize: 15, fontWeight: 'bold', color: colors.primaryDark },
-  buttonIcon: { fontSize: 16 },
-  buttonOutline: {
-    borderWidth: 2,
-    borderColor: colors.primary,
-    borderRadius: 10,
-    padding: 13,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    marginBottom: 10,
+  btnPrimaryText: { fontSize: 14, fontWeight: '800', color: '#1a3a20' },
+  btnOutline: {
+    flex: 1, borderWidth: 1.5, borderColor: 'rgba(200,168,75,0.4)', borderRadius: 12, padding: 13,
+    alignItems: 'center', justifyContent: 'center',
   },
-  buttonOutlineText: { fontSize: 15, fontWeight: 'bold', color: colors.primary },
-  buttonDisabled: { opacity: 0.6 },
-  resultBox: {
-    borderWidth: 1.5,
-    borderRadius: 8,
-    padding: 12,
-    marginTop: 4,
-  },
-  resultText: { fontSize: 14, fontWeight: '500' },
-  fileList: {
-    marginTop: 12,
-    padding: 12,
-    backgroundColor: colors.background,
-    borderRadius: 8,
-  },
-  fileListTitle: { fontSize: 13, fontWeight: '700', color: colors.textSecondary, marginBottom: 8 },
-  fileName: { fontSize: 13, color: colors.text, marginBottom: 4 },
-  infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderLight,
-  },
-  infoLabel: { fontSize: 13, color: colors.textLight, fontWeight: '500' },
-  infoValue: { fontSize: 13, color: colors.text, fontWeight: '600', flex: 1, textAlign: 'right' },
-  aboutText: {
-    fontSize: 13,
-    color: colors.textSecondary,
-    lineHeight: 22,
-  },
+  btnOutlineText: { fontSize: 14, fontWeight: '700', color: '#C8A84B' },
+  btnDisabled: { opacity: 0.55 },
+  result: { borderRadius: 10, borderWidth: 1, padding: 12, marginTop: 8 },
+  resultOk: { backgroundColor: 'rgba(39,174,96,0.08)', borderColor: 'rgba(39,174,96,0.20)' },
+  resultErr: { backgroundColor: 'rgba(231,76,60,0.08)', borderColor: 'rgba(231,76,60,0.20)' },
+  resultText: { fontSize: 13, fontWeight: '600' },
+  fileList: { marginTop: 10, padding: 12, backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 10 },
+  fileListTitle: { fontSize: 12, fontWeight: '700', color: 'rgba(255,255,255,0.4)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 },
+  fileName: { fontSize: 13, color: 'rgba(255,255,255,0.65)', marginBottom: 4 },
+  infoRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.05)' },
+  infoKey: { fontSize: 13, color: 'rgba(255,255,255,0.4)' },
+  infoVal: { fontSize: 13, color: 'rgba(255,255,255,0.75)', fontWeight: '600', maxWidth: '55%', textAlign: 'right' },
+  about: { fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 22 },
 });
 
 export default SettingsScreen;
