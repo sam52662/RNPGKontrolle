@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
   dividerText: { fontSize: 11, fontWeight: '800', color: 'rgba(255,255,255,0.55)', letterSpacing: 1.5 },
 
   empty: { alignItems: 'center', paddingTop: 32, paddingHorizontal: 32 },
-  emptyCircleImg: { width: 174, height: 174, borderRadius: 87, marginBottom: 28 },
+  emptyCircleImg: { width: 192, height: 192, borderRadius: 96, marginBottom: 28 },
   emptyTitle: { fontSize: 24, fontWeight: '900', color: '#fff', marginBottom: 10 },
   emptyBody: { fontSize: 15, color: 'rgba(255,255,255,0.6)', textAlign: 'center', lineHeight: 24 },
 
