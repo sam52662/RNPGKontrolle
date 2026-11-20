@@ -122,9 +122,7 @@ const HomeScreen = ({ navigation }) => {
         {/* ── List / Empty ── */}
         {kontrollen.length === 0 ? (
           <View style={styles.empty}>
-            <View style={styles.emptyCircle}>
-              <Image source={{ uri: ICON_FISH_CLIPBOARD_GREEN }} style={styles.emptyIconImg} />
-            </View>
+            <Image source={require('../../assets/icon-history-circle.png')} style={styles.emptyCircleImg} />
             <Text style={styles.emptyTitle}>Noch keine Kontrollen</Text>
             <Text style={styles.emptyBody}>Starten Sie Ihre erste Fischereikontrolle{'\n'}mit dem Button oben.</Text>
           </View>
@@ -241,14 +239,7 @@ const styles = StyleSheet.create({
   dividerText: { fontSize: 11, fontWeight: '800', color: 'rgba(255,255,255,0.55)', letterSpacing: 1.5 },
 
   empty: { alignItems: 'center', paddingTop: 32, paddingHorizontal: 32 },
-  emptyCircle: {
-    width: 160, height: 160, borderRadius: 80,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    borderWidth: 1.5, borderColor: 'rgba(61,186,78,0.35)',
-    alignItems: 'center', justifyContent: 'center', marginBottom: 28,
-    overflow: 'visible',
-  },
-  emptyIconImg: { width: 160, height: 160 },
+  emptyCircleImg: { width: 160, height: 160, marginBottom: 28 },
   emptyTitle: { fontSize: 24, fontWeight: '900', color: '#fff', marginBottom: 10 },
   emptyBody: { fontSize: 15, color: 'rgba(255,255,255,0.6)', textAlign: 'center', lineHeight: 24 },
 
